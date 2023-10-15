@@ -26,7 +26,7 @@ Also check out our backend, AutoFlow Engine! https://github.com/naman-doshi/Auto
 4. Add the cloned folder as a project to Unity Hub
 5. Open the project
 6. Clone AutoFlow's backend server
-7. In the root directory of AutoFlow backend, run `./server.cmd`. Choose "Yes" to use AutoFlow and "No" to use the selfish algorithm for comparison.
+7. In the root directory of AutoFlow backend, run `./server.cmd`. Choose "Yes" to use AutoFlow or "No" to use the selfish algorithm for comparison.
 8. Start Unity's play mode
 9. Enjoy!
 
@@ -34,3 +34,19 @@ Also check out our backend, AutoFlow Engine! https://github.com/naman-doshi/Auto
 
 1. You can check out the scripts implemented in C# at [/Assets/WebSocketTraffic](https://github.com/Software-Cat/AutoFlowMetropolis/tree/main/Assets/WebSocketTraffic). They are highly readable even without Unity experience.
 2. You can check out some photos of the Unity project in our design document, or our video.
+
+---
+
+## Important Files
+
+### `Intersection.cs`
+
+Handles full intersection simulation with light phases and cycles.
+
+### `Vehicle.cs`
+
+Represents the vehicle, with behaviors for autonomous driving following AutoFlow given path, stopping at lights, stopping when other vehicles block the path, etc. 
+
+### `WebSocketManager.cs`
+
+Handles communication over the network (with remote servers or running localhost).
