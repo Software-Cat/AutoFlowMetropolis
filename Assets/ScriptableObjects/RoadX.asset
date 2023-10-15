@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0a4966109b440acbc4f73f2ae90e833, type: 3}
+  m_Name: RoadX
+  m_EditorClassIdentifier: 
+  prfab: {fileID: 144453713543457902, guid: c44aa20be005cb7489963920622f7b0e, type: 3}
+  xPlusSocket: {fileID: 11400000, guid: 3d6e2a02886dd3b48be7be05dfad7df7, type: 2}
+  xMinusSocket: {fileID: 11400000, guid: 3d6e2a02886dd3b48be7be05dfad7df7, type: 2}
+  zPlusSocket: {fileID: 11400000, guid: b385cb40d8d2a6a49aef47c301089d6f, type: 2}
+  zMinusSocket: {fileID: 11400000, guid: b385cb40d8d2a6a49aef47c301089d6f, type: 2}
+  weight: 5
+  xPlusConnections:
+  - {fileID: 11400000, guid: 3d6e2a02886dd3b48be7be05dfad7df7, type: 2}
+  xMinusConnections:
+  - {fileID: 11400000, guid: 3d6e2a02886dd3b48be7be05dfad7df7, type: 2}
+  zPlusConnections:
+  - {fileID: 11400000, guid: b385cb40d8d2a6a49aef47c301089d6f, type: 2}
+  zMinusConnections:
+  - {fileID: 11400000, guid: b385cb40d8d2a6a49aef47c301089d6f, type: 2}
