@@ -18,7 +18,19 @@ namespace WebSocketTraffic
 
         private void Update()
         {
-            var cumulEm = vehicleManager.vehicles.Values.Sum(vehicle => vehicle.cumulativeEmission);
+            //var cumulEm = vehicleManager.vehicles.Values.Sum(vehicle => (vehicle.cumulativeEmission + ((vehicle.cumulativeEmission / (vehicle.tripTime - vehicle.idleTime) * vehicle.idleTime * 2))));
+            var cumulEm = 0f;
+            for (var i = 0; i < vehicleManager.vehicles.Count; i++) {
+                var vehicle = vehicleManager.vehicles[i];
+                var dt = vehicle.tripTime - vehicle.idleTime;
+                if (dt > 0) {
+                    var extra = (vehicle.cumulativeEmission / dt) * vehicle.idleTime * 2;
+                    Debug.Log(vehicle.cumulativeEmission + " " + extra);
+                    cumulEm += vehicle.cumulativeEmission + (((vehicle.cumulativeEmission / dt) * vehicle.idleTime * 2));
+                } else {
+                    cumulEm += vehicle.cumulativeEmission;
+                }
+            }
             emissionsText.text = "Cumulative Emissions: " + cumulEm + "kg CO2";
 
             var cumulTime = vehicleManager.vehicles.Values.Sum(vehicle => vehicle.tripTime);
