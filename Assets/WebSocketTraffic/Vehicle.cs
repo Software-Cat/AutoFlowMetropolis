@@ -114,10 +114,9 @@ namespace WebSocketTraffic
             if (blockedByIntersection)
             {   
                 idleTime += Time.deltaTime * passengerCount;
+                cumulativeEmission += 2 * speed * Time.deltaTime * emissionRate; // idle emission
                 return;
             }
-
-            cumulativeEmission += speed * Time.deltaTime * emissionRate;
 
             // Is hitting car
             if (!DetectObstacleByRaycast() || bypassCollisions)
@@ -133,6 +132,7 @@ namespace WebSocketTraffic
                 }
 
                 currentSessionIdleTime = 0;
+                cumulativeEmission += speed * Time.deltaTime * emissionRate;
             }
             // else if (useAutoFlow)
             // {
@@ -143,6 +143,7 @@ namespace WebSocketTraffic
             {
                 idleTime += Time.deltaTime * passengerCount;
                 currentSessionIdleTime += Time.deltaTime;
+                cumulativeEmission += 2 * speed * Time.deltaTime * emissionRate; // idle emission
             }
 
             // Collision bypass (likely cars gridlocked)
