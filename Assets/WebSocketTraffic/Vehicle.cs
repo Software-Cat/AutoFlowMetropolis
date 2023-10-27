@@ -99,12 +99,6 @@ namespace WebSocketTraffic
             // Next node
             if (ReachedGoal()) OnReachGoal();
 
-            // Emission calculation
-            if (rb.velocity.magnitude < 0.01f)
-                // Idle emissions (equal to 5 m/s travel)
-                cumulativeEmission += 5 * emissionRate * Time.deltaTime;
-            else
-                cumulativeEmission += speed * Time.deltaTime * emissionRate;
             tripTime += Time.deltaTime * passengerCount;
 
             // Cosmetics
@@ -118,10 +112,12 @@ namespace WebSocketTraffic
 
             // Intersection logic (CAN RETURN EARLY HERE AND SKIP THE REST!!!)
             if (blockedByIntersection)
-            {
+            {   
                 idleTime += Time.deltaTime * passengerCount;
                 return;
             }
+
+            cumulativeEmission += speed * Time.deltaTime * emissionRate;
 
             // Is hitting car
             if (!DetectObstacleByRaycast() || bypassCollisions)
