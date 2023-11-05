@@ -4,6 +4,26 @@ using System.Collections.Generic;
 
 namespace WebSocketTraffic
 {
+
+    [System.Serializable]
+    public class Tuple
+    {
+        public int x;
+        public int y;
+    }
+
+    [System.Serializable]
+    public class Dict
+    {   
+        public int key;
+        public List<Tuple> value;
+    }
+
+    [System.Serializable]
+    public class Root
+    {
+        public List<Dict> data;
+    }
     public class WebsocketManager : MonoBehaviour
     {
         public bool websocketHasInitialized;
@@ -37,10 +57,10 @@ namespace WebSocketTraffic
             {   
                 var vehicle = pair.Value;
                 updatemsg += vehicle.id + ":{'Metadata':[";
-                updatemsg += vehicle.transform.position.x + "," + vehicle.transform.position.z + "," + vehicle.currentRoadId + "],'Routes':[";
+                updatemsg += vehicle.transform.position.x + "," + vehicle.transform.position.y + "," + vehicle.currentRoadId + "],'Routes':[";
                 foreach (var routenode in vehicle.route)
                 {
-                    updatemsg += "[" + routenode.x + "," + routenode.z + "],";
+                    updatemsg += "(" + routenode.x + "," + routenode.y + "),";
                 }
                 updatemsg += "]},";
                 //Debug.Log(infor[0] + " " + infor[1]);
@@ -67,8 +87,14 @@ namespace WebSocketTraffic
         private void HandleMessage(string jsonMsg)
         {
             if (amUpdating) {
-                string newRoutes = jsonMsg;
-                Debug.Log(newRoutes);
+                Root newroutes = JsonUtility.FromJson<Root>(jsonMsg);
+                // seems to be 0 length
+                foreach (var item in newroutes.data)
+                {
+                    Debug.Log(item.value[0].x + " " + item.value[0].y + " " + 1);
+                }
+                Debug.Log("Received: " + jsonMsg);
+
             } else if (websocketHasInitialized) {
                 var updateMsg = JsonUtility.FromJson<UpdateMessage>(jsonMsg);
                 vehicleManager.HandleUpdateMessage(updateMsg);
