@@ -2,28 +2,8 @@ using UnityEngine;
 using WebSocketSharp;
 using System.Collections.Generic;
 
-namespace WebSocketTraffic
-{
+namespace WebSocketTraffic {
 
-    [System.Serializable]
-    public class Tuple
-    {
-        public int x;
-        public int y;
-    }
-
-    [System.Serializable]
-    public class Dict
-    {   
-        public int key;
-        public List<Tuple> value;
-    }
-
-    [System.Serializable]
-    public class Root
-    {
-        public List<Dict> data;
-    }
     public class WebsocketManager : MonoBehaviour
     {
         public bool websocketHasInitialized;
@@ -57,18 +37,16 @@ namespace WebSocketTraffic
             {   
                 var vehicle = pair.Value;
                 updatemsg += vehicle.id + ":{'Metadata':[";
-                updatemsg += vehicle.transform.position.x + "," + vehicle.transform.position.y + "," + vehicle.currentRoadId + "],'Routes':[";
+                updatemsg += vehicle.transform.position.x + "," + vehicle.transform.position.z + "," + vehicle.currentRoadId + "],'Routes':[";
                 foreach (var routenode in vehicle.route)
                 {
-                    updatemsg += "(" + routenode.x + "," + routenode.y + "),";
+                    updatemsg += "(" + routenode.x + "," + routenode.y + "," + routenode.z + "),";
                 }
                 updatemsg += "]},";
                 //Debug.Log(infor[0] + " " + infor[1]);
             }
 
             updatemsg += "}";
-
-            amUpdating = true;
 
             ws.Send(updatemsg);
         }
@@ -87,22 +65,22 @@ namespace WebSocketTraffic
         private void HandleMessage(string jsonMsg)
         {
             if (amUpdating) {
-                Root newroutes = JsonUtility.FromJson<Root>(jsonMsg);
-                // seems to be 0 length
-                foreach (var item in newroutes.data)
-                {
-                    Debug.Log(item.value[0].x + " " + item.value[0].y + " " + 1);
-                }
-                Debug.Log("Received: " + jsonMsg);
 
+                UpdateMessage updateMsg = JsonUtility.FromJson<UpdateMessage>(jsonMsg);
+                vehicleManager.HandleUpdateMessage(updateMsg);
+                Debug.Log("updated");
+                
             } else if (websocketHasInitialized) {
                 var updateMsg = JsonUtility.FromJson<UpdateMessage>(jsonMsg);
                 vehicleManager.HandleUpdateMessage(updateMsg);
+                amUpdating = true;
+                Debug.Log("firstupdate");
             } else {
                 var initMsg = JsonUtility.FromJson<InitMessage>(jsonMsg);
                 initialSpawner.HandleInitMessage(initMsg);
                 websocketHasInitialized = true;
                 initialSpawner.timeToSpawn = true;
+                Debug.Log("init");
             }
         }
     }

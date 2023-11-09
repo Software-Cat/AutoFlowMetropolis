@@ -39,6 +39,8 @@ namespace WebSocketTraffic
 
         private int carMask;
 
+        public List<Vector3> visited = new();
+
         public Vector3 NextGoal
         {
             get
@@ -221,6 +223,7 @@ namespace WebSocketTraffic
             goal = new Vector3(nextNode.x, 0, nextNode.y);
             speed = roadManager.roads[(int)nextNode.z].speedLimit;
             currentRoadId = (int)nextNode.z;
+            visited.Add(route[0]);
             route.RemoveAt(0);
         }
 
@@ -247,7 +250,8 @@ namespace WebSocketTraffic
                 goal = transform.position;
             }
             else
-            {
+            {   
+                if (useAutoFlow) while (visited.Contains(route[0]) && route.Count > 1) route.RemoveAt(0);
                 goal = new Vector3(msg.route[0].x, 0, msg.route[0].y);
                 speed = roadManager.roads[(int)msg.route[0].z].speedLimit;
                 currentRoadId = (int)route[0].z;
