@@ -10,6 +10,8 @@ namespace WebSocketTraffic
     {
         public int id;
         public Vector3 goal;
+
+        public Vector3 location;
         public int currentRoadId = -1;
         public float speed = 5f;
         public List<Vector3> route = new();
@@ -100,6 +102,8 @@ namespace WebSocketTraffic
                 currentRoadId = -1;
                 return;
             }
+
+            location = transform.position;
 
             // Next node
             if (ReachedGoal()) OnReachGoal();
