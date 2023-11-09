@@ -11,10 +11,12 @@ namespace WebSocketTraffic
         public int id;
         public Vector3 goal;
 
+        public Vector3 spawn;
+
         public Vector3 location;
         public int currentRoadId = -1;
 
-        public float positionOnRoad;
+        // public float positionOnRoad;
         public float speed = 5f;
         public List<Vector3> route = new();
         public float rotSpeed = 10f;
@@ -111,15 +113,15 @@ namespace WebSocketTraffic
             if (ReachedGoal()) OnReachGoal();
 
             location = transform.position;
-            var curRoad = roadManager.roads[currentRoadId];
+            // var curRoad = roadManager.roads[currentRoadId];
 
-            if (Math.Abs(location.x - curRoad.RealStartPos.x) < tolerance && Math.Abs(location.x - curRoad.RealEndPos.x) < tolerance) {
-                positionOnRoad = Math.Abs(location.z - curRoad.RealStartPos.z) / curRoad.Length;
-            } else if (Math.Abs(location.z - curRoad.RealStartPos.z) < tolerance && Math.Abs(location.z - curRoad.RealEndPos.z) < tolerance) {
-                positionOnRoad = Math.Abs(location.x - curRoad.RealStartPos.x) / curRoad.Length;
-            } else {
-                positionOnRoad = -1f;
-            }
+            // if (Math.Abs(location.x - curRoad.RealStartPos.x) < tolerance && Math.Abs(location.x - curRoad.RealEndPos.x) < tolerance) {
+            //     positionOnRoad = Math.Abs(location.z - curRoad.RealStartPos.z) / curRoad.Length;
+            // } else if (Math.Abs(location.z - curRoad.RealStartPos.z) < tolerance && Math.Abs(location.z - curRoad.RealEndPos.z) < tolerance) {
+            //     positionOnRoad = Math.Abs(location.x - curRoad.RealStartPos.x) / curRoad.Length;
+            // } else {
+            //     positionOnRoad = -1f;
+            // }
 
             tripTime += Time.deltaTime * passengerCount;
 
