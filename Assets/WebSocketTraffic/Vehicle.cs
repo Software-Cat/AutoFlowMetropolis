@@ -223,17 +223,25 @@ namespace WebSocketTraffic
             if (route.Count == 1) {
                 nextNode = route[0];
             } else {
-                // var dx1 = goal.x - prevGoal.x;
-                // dx1 = dx1 / Math.Abs(dx1);
-                // var dy1 = goal.z - prevGoal.y;
-                // dy1 = dy1 / Math.Abs(dy1);
+                var dx1 = goal.x - prevGoal.x;
+                dx1 = dx1 / Math.Abs(dx1);
+                var dy1 = goal.z - prevGoal.y;
+                dy1 = dy1 / Math.Abs(dy1);
 
-                // var dx2 = goal.x - route[1].x;
-                // dx2 = dx2 / Math.Abs(dx2);
-                // var dy2 = goal.z - route[1].y;
-                // dy2 = dy2 / Math.Abs(dy2);
+                var dx2 = goal.x - route[1].x;
+                dx2 = dx2 / Math.Abs(dx2);
+                var dy2 = goal.z - route[1].y;
+                dy2 = dy2 / Math.Abs(dy2);
 
-                // if (dx1 == dx2 && dy1 == dy2) route.RemoveAt(1);
+                if (dx1 == dx2 && dy1 == dy2) {
+                    // raise error
+                    Debug.Log("Error: Vehicle " + id);
+                    Debug.Log("prevGoal: " + prevGoal);
+                    Debug.Log("goal: " + goal);
+                    Debug.Log("route[1]: " + route[1]);
+                    route.RemoveAt(0);
+
+                }
                 
                 nextNode = route[1];
             }
