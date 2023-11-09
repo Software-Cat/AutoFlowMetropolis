@@ -179,13 +179,20 @@ namespace WebSocketTraffic
         public void DrawPath()
         {
             // Draw planned route to destination
-            lineRenderer.positionCount = route.Count + 1;
-            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.positionCount = route.Count + 2 + visited.Count;
+
 
             if (route.Count < 1) return;
 
+            //Debug.Log(visited);
+
+            for (var i = 0; i < visited.Count; i++)
+                lineRenderer.SetPosition(i + 1, new Vector3(visited[i].x, 1f, visited[i].y));
+            
+            lineRenderer.SetPosition(visited.Count + 1, transform.position);
+
             for (var i = 0; i < route.Count; i++)
-                lineRenderer.SetPosition(i + 1, new Vector3(route[i].x, 1f, route[i].y));
+                lineRenderer.SetPosition(visited.Count + i + 2, new Vector3(route[i].x, 1f, route[i].y));
         }
 
         public void UpdateIntersectionLights()
@@ -233,15 +240,15 @@ namespace WebSocketTraffic
                 var dy2 = goal.z - route[1].y;
                 dy2 = dy2 / Math.Abs(dy2);
 
-                if (dx1 == dx2 && dy1 == dy2) {
-                    // raise error
-                    Debug.Log("Error: Vehicle " + id);
-                    Debug.Log("prevGoal: " + prevGoal);
-                    Debug.Log("goal: " + goal);
-                    Debug.Log("route[1]: " + route[1]);
-                    route.RemoveAt(0);
+                // if (dx1 == dx2 && dy1 == dy2) {
+                //     // raise error
+                //     Debug.Log("Error: Vehicle " + id);
+                //     Debug.Log("prevGoal: " + prevGoal);
+                //     Debug.Log("goal: " + goal);
+                //     Debug.Log("route[1]: " + route[1]);
+                //     route.RemoveAt(0);
 
-                }
+                // }
                 
                 nextNode = route[1];
             }
