@@ -179,20 +179,20 @@ namespace WebSocketTraffic
         public void DrawPath()
         {
             // Draw planned route to destination
-            lineRenderer.positionCount = route.Count + 2 + visited.Count;
+            lineRenderer.positionCount = route.Count + 1 + visited.Count;
 
 
             if (route.Count < 1) return;
 
             //Debug.Log(visited);
 
-            for (var i = 0; i < visited.Count; i++)
-                lineRenderer.SetPosition(i + 1, new Vector3(visited[i].x, 1f, visited[i].y));
+            for (var i = 1; i < visited.Count; i++)
+                lineRenderer.SetPosition(i, new Vector3(visited[i].x, 1f, visited[i].y));
             
-            lineRenderer.SetPosition(visited.Count + 1, transform.position);
+            lineRenderer.SetPosition(visited.Count, transform.position);
 
             for (var i = 0; i < route.Count; i++)
-                lineRenderer.SetPosition(visited.Count + i + 2, new Vector3(route[i].x, 1f, route[i].y));
+                lineRenderer.SetPosition(visited.Count + i + 1, new Vector3(route[i].x, 1f, route[i].y));
         }
 
         public void UpdateIntersectionLights()
