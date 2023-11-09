@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
 
 namespace WebSocketTraffic
 {
@@ -41,10 +42,12 @@ namespace WebSocketTraffic
 
         public List<Vector3> visited = new();
 
+        public Vector3 prevGoal;
+
         public Vector3 NextGoal
         {
             get
-            {
+            {   
                 return route.Count switch
                 {
                     0 => Vector3.zero,
@@ -214,16 +217,32 @@ namespace WebSocketTraffic
 
         public void OnReachGoal()
         {
-            var nextNode = route.Count() switch
-            {
-                1 => route[0],
-                _ => route[1]
-            };
+
+            Vector3 nextNode;
+
+            if (route.Count == 1) {
+                nextNode = route[0];
+            } else {
+                // var dx1 = goal.x - prevGoal.x;
+                // dx1 = dx1 / Math.Abs(dx1);
+                // var dy1 = goal.z - prevGoal.y;
+                // dy1 = dy1 / Math.Abs(dy1);
+
+                // var dx2 = goal.x - route[1].x;
+                // dx2 = dx2 / Math.Abs(dx2);
+                // var dy2 = goal.z - route[1].y;
+                // dy2 = dy2 / Math.Abs(dy2);
+
+                // if (dx1 == dx2 && dy1 == dy2) route.RemoveAt(1);
+                
+                nextNode = route[1];
+            }
 
             goal = new Vector3(nextNode.x, 0, nextNode.y);
             speed = roadManager.roads[(int)nextNode.z].speedLimit;
             currentRoadId = (int)nextNode.z;
             visited.Add(route[0]);
+            prevGoal = route[0];
             route.RemoveAt(0);
         }
 
@@ -251,7 +270,6 @@ namespace WebSocketTraffic
             }
             else
             {   
-                if (useAutoFlow) while (visited.Contains(route[0]) && route.Count > 1) route.RemoveAt(0);
                 goal = new Vector3(msg.route[0].x, 0, msg.route[0].y);
                 speed = roadManager.roads[(int)msg.route[0].z].speedLimit;
                 currentRoadId = (int)route[0].z;
