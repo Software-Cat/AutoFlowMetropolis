@@ -9,13 +9,17 @@ namespace WebSocketTraffic
         public bool canProcessPendingMessage;
         public Dictionary<int, Vehicle> vehicles = new();
 
+        public bool isUpdating = false;
+
         private void Update()
         {
             if (pendingUpdateMessage != null && canProcessPendingMessage)
                 foreach (var update in pendingUpdateMessage.updates)
                 {
                     var currentVehicle = vehicles[update.id];
-                    currentVehicle.HandleUpdateMessage(update);
+
+                    if (!isUpdating) currentVehicle.HandleUpdateMessage(update);
+                    else currentVehicle.handleConstantUpdate(update);
                 }
         }
 

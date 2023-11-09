@@ -10,8 +10,7 @@ namespace WebSocketTraffic {
         public InitialSpawner initialSpawner;
         public VehicleManager vehicleManager;
         private WebSocket ws;
-
-        public bool amUpdating;
+        public bool amUpdating = false;
 
         // Awake is called on loading
         private void Awake()
@@ -64,17 +63,12 @@ namespace WebSocketTraffic {
 
         private void HandleMessage(string jsonMsg)
         {
-            if (amUpdating) {
-
-                UpdateMessage updateMsg = JsonUtility.FromJson<UpdateMessage>(jsonMsg);
-                vehicleManager.HandleUpdateMessage(updateMsg);
-                Debug.Log("updated");
-                
-            } else if (websocketHasInitialized) {
+            if (websocketHasInitialized) {
                 var updateMsg = JsonUtility.FromJson<UpdateMessage>(jsonMsg);
+                if (amUpdating) vehicleManager.isUpdating = true;
                 vehicleManager.HandleUpdateMessage(updateMsg);
                 amUpdating = true;
-                Debug.Log("firstupdate");
+                Debug.Log("update");
             } else {
                 var initMsg = JsonUtility.FromJson<InitMessage>(jsonMsg);
                 initialSpawner.HandleInitMessage(initMsg);

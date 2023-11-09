@@ -261,6 +261,15 @@ namespace WebSocketTraffic
             running = true;
         }
 
+        public void handleConstantUpdate(VehicleUpdateMessage msg) {     
+            if (route.Count > 1 && useAutoFlow)
+            {
+                route = msg.route;
+                while (visited.Contains(route[0]) && route.Count > 1) route.RemoveAt(0);
+            }
+
+        }
+
         public IEnumerator BeginBypassCollisions()
         {
             // bypassCollisions = true;
