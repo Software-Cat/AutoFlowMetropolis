@@ -14,6 +14,7 @@ namespace WebSocketTraffic
         public Vector3 spawn;
 
         public Vector3 location;
+    
         public int currentRoadId = -1;
 
         // public float positionOnRoad;
@@ -148,8 +149,7 @@ namespace WebSocketTraffic
                 for (var i = 0; i < substepsPerTick; i++)
                 {
                     // Face goal
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
-                        rotSpeed * Time.deltaTime / substepsPerTick);
+                    transform.rotation = targetRotation;
                     transform.Translate(dirToGoal * (speed * Time.deltaTime / substepsPerTick), Space.World);
                     if (DetectObstacleByRaycast()) break;
                     if (ReachedGoal()) break;
@@ -205,7 +205,7 @@ namespace WebSocketTraffic
 
             //Debug.Log(visited);
 
-            for (var i = 1; i < visited.Count; i++)
+            for (var i = 0; i < visited.Count; i++)
                 lineRenderer.SetPosition(i, new Vector3(visited[i].x, 1f, visited[i].y));
             
             lineRenderer.SetPosition(visited.Count, transform.position);
@@ -315,7 +315,8 @@ namespace WebSocketTraffic
 
         public void handleConstantUpdate(VehicleUpdateMessage msg) {     
             if (route.Count > 1 && useAutoFlow)
-            {
+            {   
+                Debug.Log("Updated route");
                 route = msg.route;
                 while (visited.Contains(route[0]) && route.Count > 1) route.RemoveAt(0);
             }

@@ -74,6 +74,7 @@ namespace WebSocketTraffic
                 vehicleComp.HandleInitMessage(vehicleMsg);
                 vehicleComp.roadManager = roadManager;
                 vehicleComp.spawn = vehicleComp.transform.position;
+                vehicleComp.useAutoFlow = vehicleMsg.useAutoFlow;
                 vehicleManager.vehicles[vehicleMsg.id] = vehicleComp;
             }
 
