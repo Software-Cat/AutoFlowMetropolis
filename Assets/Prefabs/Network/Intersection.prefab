@@ -100,7 +100,7 @@ MonoBehaviour:
   enterRoadIds: 
   exitRoadIds: 
   queuingVehicles: []
-  yellowDuration: 1.5
+  yellowDuration: 2
   greenDuration: 3.5
   inYellowPhase: 0
   currentAllowedId: -1

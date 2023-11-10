@@ -99,11 +99,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   goal: {x: 0, y: 0, z: 0}
+  spawn: {x: 0, y: 0, z: 0}
+  location: {x: 0, y: 0, z: 0}
   currentRoadId: 0
   speed: 5
   route: []
   rotSpeed: 13
-  tolerance: 0.8
+  tolerance: 1.5
   roadManager: {fileID: 0}
   tickMark: {fileID: 4400815997777263458}
   raycastPoints:
@@ -129,6 +131,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 167171762361880083}
   drawPathLine: 0
   substepsPerTick: 3
+  visited: []
+  prevGoal: {x: 0, y: 0, z: 0}
 --- !u!114 &3509513200066379057
 MonoBehaviour:
   m_ObjectHideFlags: 0

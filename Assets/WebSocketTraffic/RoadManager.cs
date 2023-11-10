@@ -33,12 +33,12 @@ namespace WebSocketTraffic
             if (roads[roadId].IsPointRoad)
                 // Zero length road (double intersection)
                 return carCount != 0;
-            if (len < 40f)
-                // Penalty for short roads as they get full too easily
-                len -= 5f;
+            //if (len < 40f)
+            //    // Penalty for short roads as they get full too easily
+            //    len -= 5f;
             var density = carCount / len;
 
-            return density >= 0.22f;
+            return density >= 0.20f;
         }
     }
 }

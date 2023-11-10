@@ -20,11 +20,11 @@ namespace WebSocketTraffic
         public float speed = 5f;
         public List<Vector3> route = new();
         public float rotSpeed = 10f;
-        public float tolerance = 0.5f;
+        public float tolerance = 1f; // modify this in prefab inspector
         public RoadManager roadManager;
         public GameObject tickMark;
         public List<Transform> raycastPoints;
-        public float inFrontThreshold = 1f;
+        public float inFrontThreshold = 1f; // modify this in prefab inspector
         public BoxCollider boxCollider;
         public VehicleCustomizer vehicleCustomizer;
         public Rigidbody rb;
@@ -67,11 +67,16 @@ namespace WebSocketTraffic
         {
             get
             {
+                //return route.Count switch
+                //{
+                //    0 => -1,
+                //    1 => (int)route[0].z,
+                //    _ => (int)route[1].z
+                //};
                 return route.Count switch
                 {
                     0 => -1,
-                    1 => (int)route[0].z,
-                    _ => (int)route[1].z
+                    _ => (int)route[0].z
                 };
             }
         }
@@ -148,8 +153,16 @@ namespace WebSocketTraffic
                 for (var i = 0; i < substepsPerTick; i++)
                 {
                     // Face goal
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
-                        rotSpeed * Time.deltaTime / substepsPerTick);
+                    //var degree = Vector3.Angle(transform.forward, dirToGoal);
+                    //if (degree > 100f && tripTime > 1f)
+                    //{
+                    //    Debug.Log($"{transform.forward}, {transform.rotation}, {dirToGoal}, {targetRotation}");
+                    //    Debug.LogError($"Car ID: {id}, {degree} degree turn");
+                    //    Debug.Break();
+                    //}
+                    //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
+                    //    rotSpeed * Time.deltaTime / substepsPerTick);
+                    transform.rotation = targetRotation;
                     transform.Translate(dirToGoal * (speed * Time.deltaTime / substepsPerTick), Space.World);
                     if (DetectObstacleByRaycast()) break;
                     if (ReachedGoal()) break;
@@ -272,9 +285,11 @@ namespace WebSocketTraffic
                 nextNode = route[1];
             }
 
+            // Set route ID to the last passed goal
+            currentRoadId = (int)route[0].z;
             goal = new Vector3(nextNode.x, 0, nextNode.y);
             speed = roadManager.roads[(int)nextNode.z].speedLimit;
-            currentRoadId = (int)nextNode.z;
+            //currentRoadId = (int)nextNode.z;
             visited.Add(route[0]);
             prevGoal = route[0];
             route.RemoveAt(0);
@@ -282,7 +297,12 @@ namespace WebSocketTraffic
 
         public bool ReachedGoal()
         {
-            return Vector3.Distance(transform.position, goal) < tolerance;
+            if (Vector3.Distance(transform.position, goal) < tolerance)
+            {
+                transform.position = goal;
+                return true;
+            }
+            return false;
         }
 
         public void HandleInitMessage(VehicleInitMessage msg)
@@ -306,7 +326,7 @@ namespace WebSocketTraffic
             {   
                 goal = new Vector3(msg.route[0].x, 0, msg.route[0].y);
                 speed = roadManager.roads[(int)msg.route[0].z].speedLimit;
-                currentRoadId = (int)route[0].z;
+                //currentRoadId = (int)route[0].z;
                 transform.LookAt(goal);
             }
 
@@ -317,7 +337,7 @@ namespace WebSocketTraffic
             if (route.Count > 1 && useAutoFlow)
             {
                 route = msg.route;
-                while (visited.Contains(route[0]) && route.Count > 1) route.RemoveAt(0);
+                while ((route.Count > 1) && visited.Contains(route[0])) route.RemoveAt(0);
             }
 
         }
@@ -335,21 +355,36 @@ namespace WebSocketTraffic
 
         public bool IsNextGoalOccupied()
         {
-            if (route.Count < 2) return false;
+            // Note: Destination could be at the start of a road which could be occupied
+            if (route.Count == 0) return false;
 
-            // Encountered road with zero length (double intersection)
-            if (currentRoadId != -1)
-                if (roadManager.roads[currentRoadId].IsPointRoad)
-                    return Physics.CheckBox(new Vector3(route[2].x, 0, route[2].y) + Vector3.up, new Vector3(3, .5f, 3),
-                        Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
+            //// Encountered road with zero length (double intersection)
+            //if (currentRoadId != -1)
+            //    if (roadManager.roads[currentRoadId].IsPointRoad)
+            //        return Physics.CheckBox(new Vector3(route[2].x, 0, route[2].y) + Vector3.up, new Vector3(3, .5f, 3), // doesn't work because dupes have been elimiinated
+            //            Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
 
-            if (useAutoFlow)
-                // Use a tighter detection box
+            //if (useAutoFlow)
+            //    // Use a tighter detection box
+            //    return Physics.CheckBox(new Vector3(route[1].x, 0, route[1].y) + Vector3.up, new Vector3(1, .5f, 1),
+            //        Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
+
+            //return Physics.CheckBox(new Vector3(route[1].x, 0, route[1].y) + Vector3.up, new Vector3(3, .5f, 3),
+            //    Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
+
+            // Use the same check for everything to maximise consistency
+            if (route.Count == 1 || Vector3.Distance(transform.position, prevGoal) < tolerance)
+            {
+                // Vehicle has clipped into goal despite being stopped after triggering intersection's hitbox
+                return Physics.CheckBox(new Vector3(route[0].x, 0, route[0].y) + Vector3.up, new Vector3(1, .5f, 1),
+                    Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
+            } else
+            {
+                // Vehicle has not yet reached the goal at the end of the road and is stopped after triggering intersection's hitbox
                 return Physics.CheckBox(new Vector3(route[1].x, 0, route[1].y) + Vector3.up, new Vector3(1, .5f, 1),
                     Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
-
-            return Physics.CheckBox(new Vector3(route[1].x, 0, route[1].y) + Vector3.up, new Vector3(3, .5f, 3),
-                Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
+            }
+            
         }
     }
 }

@@ -13,8 +13,8 @@ namespace WebSocketTraffic
         public List<int> enterRoadIds;
         public List<int> exitRoadIds;
         public List<Vehicle> queuingVehicles = new();
-        public float yellowDuration = 1f;
-        public float greenDuration = 3f;
+        public float yellowDuration = 1f; // Edit in prefab inspector
+        public float greenDuration = 3f; // Between 3 and 8 seconds
         public bool inYellowPhase;
         public int currentAllowedId = -1;
         public List<int> pattern;
@@ -101,27 +101,55 @@ namespace WebSocketTraffic
         public void UpdateWaitingVehicle(Vehicle vehicle)
         {
             var canEnter = false;
-            if (manager.roadManager.roads[vehicle.currentRoadId].IsPointRoad)
+
+            if (vehicle.route.Count == 0)
             {
-                if (vehicle.route.Count <= 1)
-                    canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied();
-                else
-                    canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
-                               !manager.roadManager.IsRoadFull((int)vehicle.route[2].z);
+                // Vehicle has already reached its goal
+                canEnter = false;
             }
-            else
+            else if (vehicle.route.Count == 1 || Vector3.Distance(vehicle.transform.position, vehicle.prevGoal) < vehicle.tolerance)
             {
-                canEnter = (vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
-                            !manager.roadManager.IsRoadFull(vehicle.NextRoadId)) ||
-                           !enterRoadIds.Contains(vehicle.currentRoadId);
+                // Vehicle has clipped into goal despite being stopped after triggering intersection's hitbox
+                canEnter = vehicle.prevGoal.z == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
+                            !manager.roadManager.IsRoadFull((int)vehicle.route[0].z) &&
+                            !inYellowPhase;
+            } else
+            {
+                // Vehicle has not yet reached the goal at the end of the road and is stopped after triggering intersection's hitbox
+                canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
+                            !manager.roadManager.IsRoadFull((int)vehicle.route[1].z) &&
+                            !inYellowPhase;
             }
+
+            //if (manager.roadManager.roads[vehicle.currentRoadId].IsPointRoad)
+            //{
+            //    if (vehicle.route.Count <= 1)
+            //    {
+            //        canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied();
+            //    }
+            //    else
+            //    {
+            //        canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
+            //                   !manager.roadManager.IsRoadFull(vehicle.NextRoadId);
+            //    }
+            //}
+            //else
+            //{
+            //    canEnter = (vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
+            //                !manager.roadManager.IsRoadFull(vehicle.NextRoadId)) ||
+            //               !enterRoadIds.Contains(vehicle.currentRoadId);
+            //}
 
             // canEnter = (vehicle.currentRoadId == currentAllowedId &&
             //                 !vehicle.IsNextGoalOccupied()) ||
             //                !enterRoadIds.Contains(vehicle.currentRoadId);
             vehicle.blockedByIntersection = !canEnter;
 
-            if (canEnter) queuingVehicles.Remove(vehicle);
+            if (canEnter)
+            {
+                queuingVehicles.Remove(vehicle);
+                vehicle.currentRoadId = (int)vehicle.route[0].z; // Adding car to the next road as soon as it leaves its previous road
+            }
         }
 
         public IEnumerator SwitchSignal()
@@ -129,11 +157,14 @@ namespace WebSocketTraffic
             while (true)
             {
                 // Wait with green
-                if (useAutoFlow && queuingVehicles.All(v => v.currentRoadId != currentAllowedId))
-                    // If no cars in this direction, skip its green light
-                    yield return new WaitForSeconds(0.6f);
-                else
-                    yield return new WaitForSeconds(greenDuration);
+                //if (useAutoFlow && queuingVehicles.All(v => v.currentRoadId != currentAllowedId))
+                //     If no cars in this direction, skip its green light
+                //    yield return new WaitForSeconds(0.6f);
+                //else
+                //    yield return new WaitForSeconds(greenDuration);
+
+                // Wait for traffic light
+                yield return new WaitForSeconds(greenDuration);
 
                 // Yellow light
                 inYellowPhase = true;
