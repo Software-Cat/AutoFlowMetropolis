@@ -20,6 +20,7 @@ namespace WebSocketTraffic
                     var currentVehicle = vehicles[update.id];
 
                     if (!isUpdating) {
+                        currentVehicle.systemRunning = true;
                         currentVehicle.HandleUpdateMessage(update);
                     } else {
                         currentVehicle.handleConstantUpdate(update);
@@ -32,6 +33,7 @@ namespace WebSocketTraffic
             foreach (Vehicle vehicle in vehicles.Values)
             {
                 if (vehicle.route.Count != 0)
+                    
                     vehicle.running = true;
             }
         }

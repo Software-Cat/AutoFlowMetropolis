@@ -24,11 +24,14 @@ namespace WebSocketTraffic
 
         public int currentRoadId = -1;
 
+        public float deadTime = 0f;
+
         // public float positionOnRoad;
         public float speed = 5f;
         public List<Vector3> route = new();
         public float rotSpeed = 10f;
-        public float tolerance = 1f; // modify this in prefab inspector
+        public float tolerance = 1.5f; // modify this in prefab inspector
+        public float destTolerance = 5f;
         public RoadManager roadManager;
         public GameObject tickMark;
         public List<Transform> raycastPoints;
@@ -57,6 +60,8 @@ namespace WebSocketTraffic
         public List<Vector3> visited = new();
 
         public Vector3 prevGoal;
+
+        public bool systemRunning = false;
 
         public Vector3 NextGoal
         {
@@ -103,22 +108,32 @@ namespace WebSocketTraffic
             lineRenderer = GetComponent<LineRenderer>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             // Before route given or after route finished
-            if (!running) return;
 
-            // Route just finished
-            if (route.Count == 0)
+            if (route.Count == 0 && systemRunning)
             {
+                deadTime += Time.deltaTime;
+                if (deadTime >= 10f) {
+                    gameObject.SetActive(false);
+                    return;
+                }
                 tickMark.SetActive(true);
                 boxCollider.enabled = false;
                 vehicleCustomizer.GhostMode();
-                running = false;
                 rb.isKinematic = true;
                 currentRoadId = -1;
                 return;
             }
+
+            if (!running) return;
+            
+
+            // Route just finished
+            
+
+            
 
             location = transform.position;
 
@@ -133,6 +148,7 @@ namespace WebSocketTraffic
             if (blockedByIntersection || DetectObstacleByRaycast())
             {
                 idleTime += Time.deltaTime * passengerCount;
+                tripTime += Time.deltaTime * passengerCount;
                 cumulativeEmission += 2 * speed * Time.deltaTime * emissionRate; // idle emission
                 return;
             }
@@ -153,7 +169,7 @@ namespace WebSocketTraffic
             var dirToGoal = (goal - position).normalized;
             var targetRotation = Quaternion.LookRotation(dirToGoal);
 
-            // Is hitting car
+            // Is moving
             if (!DetectObstacleByRaycast() || bypassCollisions)
             {
                 for (var i = 0; i < substepsPerTick; i++)
@@ -278,6 +294,20 @@ namespace WebSocketTraffic
 
             Vector3 nextNode;
 
+            if (route.Count == 0) {
+                deadTime += Time.deltaTime;
+                if (deadTime >= 10f) {
+                    gameObject.SetActive(false);
+                    return;
+                }
+                tickMark.SetActive(true);
+                boxCollider.enabled = false;
+                vehicleCustomizer.GhostMode();
+                rb.isKinematic = true;
+                currentRoadId = -1;
+                return;
+            }
+
             if (route.Count == 1) {
                 nextNode = route[0];
             } else {
@@ -307,12 +337,12 @@ namespace WebSocketTraffic
             //currentRoadId = (int)route[0].z;
             goal = new Vector3(nextNode.x, 0, nextNode.y);
             speed = roadManager.roads[(int)nextNode.z].speedLimit;
-            //currentRoadId = (int)nextNode.z;
+            currentRoadId = (int)nextNode.z;
             visited.Add(route[0]);
             prevGoal = route[0];
             route.RemoveAt(0);
-            if (route.Count > 0)
-                currentRoadId = (int)route[0].z; // Set current road ID to next road in advance to avoid vehicles from entering full roads
+            // if (route.Count > 0)
+            //     currentRoadId = (int)route[0].z; // Set current road ID to next road in advance to avoid vehicles from entering full roads
         }
 
         public bool ReachedGoal()
@@ -322,6 +352,34 @@ namespace WebSocketTraffic
                 transform.position = goal;
                 return true;
             }
+
+            if (route.Count == 1 && Vector3.Distance(transform.position, goal) < destTolerance)
+            {
+                transform.position = goal;
+                return true;
+            }
+
+            if (route.Count > 1)
+            {
+                var nextGoal = new Vector3(route[1].x, 0, route[1].y);
+                if (Vector3.Distance(transform.position, nextGoal) <= Vector3.Distance(nextGoal, goal))
+                {
+                    return true;
+                }
+            }
+
+            if (visited.Count >= 1) {
+                var len = visited.Count - 1;
+                var prev = new Vector3(visited[len].x, 0, visited[len].y);
+                if (transform.position.x <= Math.Max(goal.x, prev.x) && transform.position.x >= Math.Min(goal.x, prev.x) && transform.position.z <= Math.Max(goal.z, prev.z) && transform.position.z >= Math.Min(goal.z, prev.z)) {
+                    var dummy = 1;
+                } else {
+                    // something went wrong and it isnt in between prev and goal
+                    transform.position = goal;
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -358,7 +416,7 @@ namespace WebSocketTraffic
             if (route.Count > 1)
             {   
                 route = msg.route;
-                while ((route.Count > 1) && visited.Contains(route[0])) route.RemoveAt(0);
+                while ((route.Count > 0) && visited.Contains(route[0])) route.RemoveAt(0);
             }
 
         }
