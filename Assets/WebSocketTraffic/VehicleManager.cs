@@ -19,9 +19,14 @@ namespace WebSocketTraffic
                 {
                     var currentVehicle = vehicles[update.id];
 
-                    if (!isUpdating) currentVehicle.HandleUpdateMessage(update);
-                    else currentVehicle.handleConstantUpdate(update);
+                    if (!isUpdating) {
+                        currentVehicle.HandleUpdateMessage(update);
+                    } else {
+                        currentVehicle.handleConstantUpdate(update);
+                        
+                    }
                 }
+                pendingUpdateMessage = null;
             }
             // Simultaneously activate all cars
             foreach (Vehicle vehicle in vehicles.Values)

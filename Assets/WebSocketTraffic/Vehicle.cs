@@ -172,15 +172,15 @@ namespace WebSocketTraffic
                     
                     if (route.Count == 0) return;
 
-                    if (route[0].z != currentRoadId)
-                    {
-                        transform.rotation = targetRotation;
-                    } else {
-                        var road = roadManager.roads[currentRoadId];
-                        var roadDir = (road.RealEndPos - road.RealStartPos).normalized;
-                        var roadRotation = Quaternion.LookRotation(roadDir);
-                        transform.rotation = roadRotation;
-                    }
+                    // if (route[0].z != currentRoadId)
+                    // {
+                    //     transform.rotation = targetRotation;
+                    // } else {
+                    //     var road = roadManager.roads[currentRoadId];
+                    //     var roadDir = (road.RealEndPos - road.RealStartPos).normalized;
+                    //     var roadRotation = Quaternion.LookRotation(roadDir);
+                    //     transform.rotation = roadRotation;
+                    // }
 
                     transform.Translate(dirToGoal * (speed * Time.deltaTime / substepsPerTick), Space.World);
                     if (DetectObstacleByRaycast()) break;
@@ -355,8 +355,8 @@ namespace WebSocketTraffic
         }
 
         public void handleConstantUpdate(VehicleUpdateMessage msg) {     
-            if (route.Count > 1 && useAutoFlow)
-            {
+            if (route.Count > 1)
+            {   
                 route = msg.route;
                 while ((route.Count > 1) && visited.Contains(route[0])) route.RemoveAt(0);
             }
