@@ -42,7 +42,7 @@ namespace WebSocketTraffic
             //    len -= 5f;
             var density = carCount / len;
 
-            return density >= 0.20f;
+            return density >= 0.19f;
         }
     }
 }

@@ -169,6 +169,19 @@ namespace WebSocketTraffic
                     //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
                     //    rotSpeed * Time.deltaTime / substepsPerTick);
                     transform.rotation = targetRotation;
+                    
+                    if (route.Count == 0) return;
+
+                    if (route[0].z != currentRoadId)
+                    {
+                        transform.rotation = targetRotation;
+                    } else {
+                        var road = roadManager.roads[currentRoadId];
+                        var roadDir = (road.RealEndPos - road.RealStartPos).normalized;
+                        var roadRotation = Quaternion.LookRotation(roadDir);
+                        transform.rotation = roadRotation;
+                    }
+
                     transform.Translate(dirToGoal * (speed * Time.deltaTime / substepsPerTick), Space.World);
                     if (DetectObstacleByRaycast()) break;
                     if (ReachedGoal()) break;
@@ -224,7 +237,7 @@ namespace WebSocketTraffic
 
             //Debug.Log(visited);
 
-            for (var i = 1; i < visited.Count; i++)
+            for (var i = 0; i < visited.Count; i++)
                 lineRenderer.SetPosition(i, new Vector3(visited[i].x, 1f, visited[i].y));
             
             lineRenderer.SetPosition(visited.Count, transform.position);
