@@ -46,11 +46,50 @@ namespace WebSocketTraffic
         {
             if (!isLightControlledIntersection) return;
 
-            var v = other.GetComponent<Vehicle>();
+            var v = other.GetComponent<Vehicle>();  
 
-            // If accidentally bumped in here or not a vehicle, ignore
-            if (v == null || !enterRoadIds.Contains(v.currentRoadId)) return;
+            // If not a vehicle, ignore
+            if (v == null)
+            {
+                //print("Non-vehicle object entered intersection");
+                return;
+            }
+            // If vehicle has not been initialised yet
+            if (v.tripTime == 0)
+            {
+                return;
+            }
+            // If vehicle has not yet reached any goals, check if its current road is in the enter roads
+            if (v.prevGoal == Vector3.zero)
+            {
+                if (v.route.Count != 0 && !enterRoadIds.Contains(v.currentRoadId))
+                {
+                    //print($"Vehicle {v.id} with no preGoal");
+                    return;
+                }
+            }
+            else
+            {
+                if (Vector3.Distance(v.transform.position, new Vector3(v.prevGoal.x, 0, v.prevGoal.y)) < v.tolerance)
+                {
+                    // Vehicle has clipped into its goal
+                    if (!enterRoadIds.Contains((int)v.prevGoal.z))
+                    {
+                        //print($"Vehicle {v.id} with preGoal");
+                        return;
+                    }
+                } else
+                {
+                    // In a double intersection that's also a corner, this is important
+                    if (!enterRoadIds.Contains(v.currentRoadId))
+                    {
+                        //print($"Vehicle {v.id} with preGoal");
+                        return;
+                    }
+                }
+            }
 
+            v.hasBeenQueued = true;
             v.currentIntersection = this;
             queuingVehicles.Add(v);
             v.blockedByIntersection = true;
@@ -107,18 +146,32 @@ namespace WebSocketTraffic
                 // Vehicle has already reached its goal
                 canEnter = false;
             }
-            else if (vehicle.route.Count == 1 || Vector3.Distance(vehicle.transform.position, vehicle.prevGoal) < vehicle.tolerance)
+            else if (vehicle.route.Count == 1 || Vector3.Distance(vehicle.transform.position, new Vector3(vehicle.prevGoal.x, 0, vehicle.prevGoal.y)) < vehicle.tolerance)
             {
+                vehicle.nextRoadLength = manager.roadManager.roads[(int)vehicle.route[0].z].Length;
+                vehicle.nextRoadVehicleCount = manager.roadManager.vehicleManager.vehicles.Values.Count(v => v.currentRoadId == (int)vehicle.route[0].z && v.running);
+                vehicle.nextRoadFull = manager.roadManager.IsRoadFull((int)vehicle.route[0].z, vehicle.nextRoadVehicleCount);
+                vehicle.nextGoalOccupied = vehicle.IsNextGoalOccupied();
+                vehicle.allowedRoad = (int)vehicle.prevGoal.z == currentAllowedId;
                 // Vehicle has clipped into goal despite being stopped after triggering intersection's hitbox
-                canEnter = vehicle.prevGoal.z == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
-                            !manager.roadManager.IsRoadFull((int)vehicle.route[0].z) &&
+                canEnter = (int)vehicle.prevGoal.z == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
+                            !manager.roadManager.IsRoadFull((int)vehicle.route[0].z, vehicle.nextRoadVehicleCount) &&
                             !inYellowPhase;
+                //if (canEnter)
+                //    vehicle.currentRoadId = (int)vehicle.route[0].z; // Adding car to the next road as soon as it leaves its previous road
             } else
             {
+                vehicle.nextRoadLength = manager.roadManager.roads[(int)vehicle.route[1].z].Length;
+                vehicle.nextRoadVehicleCount = manager.roadManager.vehicleManager.vehicles.Values.Count(v => v.currentRoadId == (int)vehicle.route[1].z && v.running);
+                vehicle.nextRoadFull = manager.roadManager.IsRoadFull((int)vehicle.route[1].z, vehicle.nextRoadVehicleCount);
+                vehicle.nextGoalOccupied = vehicle.IsNextGoalOccupied();
+                vehicle.allowedRoad = vehicle.currentRoadId == currentAllowedId;
                 // Vehicle has not yet reached the goal at the end of the road and is stopped after triggering intersection's hitbox
                 canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
-                            !manager.roadManager.IsRoadFull((int)vehicle.route[1].z) &&
+                            !manager.roadManager.IsRoadFull((int)vehicle.route[1].z, vehicle.nextRoadVehicleCount) &&
                             !inYellowPhase;
+                //if (canEnter)
+                //    vehicle.currentRoadId = (int)vehicle.route[1].z; // Adding car to the next road as soon as it leaves its previous road
             }
 
             //if (manager.roadManager.roads[vehicle.currentRoadId].IsPointRoad)
@@ -148,7 +201,6 @@ namespace WebSocketTraffic
             if (canEnter)
             {
                 queuingVehicles.Remove(vehicle);
-                vehicle.currentRoadId = (int)vehicle.route[0].z; // Adding car to the next road as soon as it leaves its previous road
             }
         }
 

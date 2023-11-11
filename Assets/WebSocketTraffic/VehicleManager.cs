@@ -14,6 +14,7 @@ namespace WebSocketTraffic
         private void Update()
         {
             if (pendingUpdateMessage != null && canProcessPendingMessage)
+            {
                 foreach (var update in pendingUpdateMessage.updates)
                 {
                     var currentVehicle = vehicles[update.id];
@@ -21,6 +22,13 @@ namespace WebSocketTraffic
                     if (!isUpdating) currentVehicle.HandleUpdateMessage(update);
                     else currentVehicle.handleConstantUpdate(update);
                 }
+            }
+            // Simultaneously activate all cars
+            foreach (Vehicle vehicle in vehicles.Values)
+            {
+                if (vehicle.route.Count != 0)
+                    vehicle.running = true;
+            }
         }
 
         public void HandleUpdateMessage(UpdateMessage msg)

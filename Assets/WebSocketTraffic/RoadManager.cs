@@ -12,11 +12,15 @@ namespace WebSocketTraffic
         private void OnDrawGizmos()
         {
             foreach (var (id, road) in roads)
-                if (IsRoadFull(id))
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawWireCube(road.RealStartPos, Vector3.one * 15);
-                }
+            {
+                //if (IsRoadFull(id))
+                //{
+                //    Gizmos.color = Color.red;
+                //    Gizmos.DrawWireCube(road.RealStartPos, Vector3.one * 15);
+                //}
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireCube(road.RealStartPos, Vector3.one * 15);
+            }                
         }
 
         public void HandleInitMessage(InitMessage msg)
@@ -24,10 +28,10 @@ namespace WebSocketTraffic
             foreach (var road in msg.roads) roads[road.id] = road;
         }
 
-        public bool IsRoadFull(int roadId)
+        public bool IsRoadFull(int roadId, int carCount)
         {
             var len = roads[roadId].Length;
-            var carCount = vehicleManager.vehicles.Values.Count(v => v.currentRoadId == roadId && v.running);
+            //var carCount = vehicleManager.vehicles.Values.Count(v => v.currentRoadId == roadId && v.running);
 
             // Penalties
             if (roads[roadId].IsPointRoad)

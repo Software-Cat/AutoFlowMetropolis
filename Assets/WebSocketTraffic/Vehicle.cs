@@ -14,6 +14,14 @@ namespace WebSocketTraffic
         public Vector3 spawn;
 
         public Vector3 location;
+
+        public float nextRoadLength;
+        public int nextRoadVehicleCount;
+        public bool nextRoadFull;
+        public bool nextGoalOccupied = false;
+        public bool allowedRoad = false;
+        public bool hasBeenQueued = false;
+
         public int currentRoadId = -1;
 
         // public float positionOnRoad;
@@ -112,12 +120,22 @@ namespace WebSocketTraffic
                 return;
             }
 
-            
+            location = transform.position;
+
+            // Cosmetics
+            UpdateIntersectionLights();
+            if (drawPathLine) DrawPath();
 
             // Next node
             if (ReachedGoal()) OnReachGoal();
 
-            location = transform.position;
+            // Blocked by car in front or traffic light
+            if (blockedByIntersection || DetectObstacleByRaycast())
+            {
+                idleTime += Time.deltaTime * passengerCount;
+                cumulativeEmission += 2 * speed * Time.deltaTime * emissionRate; // idle emission
+                return;
+            }
             // var curRoad = roadManager.roads[currentRoadId];
 
             // if (Math.Abs(location.x - curRoad.RealStartPos.x) < tolerance && Math.Abs(location.x - curRoad.RealEndPos.x) < tolerance) {
@@ -130,22 +148,10 @@ namespace WebSocketTraffic
 
             tripTime += Time.deltaTime * passengerCount;
 
-            // Cosmetics
-            UpdateIntersectionLights();
-            if (drawPathLine) DrawPath();
-
             // Directions
             var position = transform.position;
             var dirToGoal = (goal - position).normalized;
             var targetRotation = Quaternion.LookRotation(dirToGoal);
-
-            // Intersection logic (CAN RETURN EARLY HERE AND SKIP THE REST!!!)
-            if (blockedByIntersection)
-            {   
-                idleTime += Time.deltaTime * passengerCount;
-                cumulativeEmission += 2 * speed * Time.deltaTime * emissionRate; // idle emission
-                return;
-            }
 
             // Is hitting car
             if (!DetectObstacleByRaycast() || bypassCollisions)
@@ -184,7 +190,7 @@ namespace WebSocketTraffic
             }
 
             // Collision bypass (likely cars gridlocked)
-            if (currentSessionIdleTime >= 100f) StartCoroutine(BeginBypassCollisions());
+            //if (currentSessionIdleTime >= 100f) StartCoroutine(BeginBypassCollisions());
         }
 
         private void OnDrawGizmos()
@@ -262,15 +268,15 @@ namespace WebSocketTraffic
             if (route.Count == 1) {
                 nextNode = route[0];
             } else {
-                var dx1 = goal.x - prevGoal.x;
-                dx1 = dx1 / Math.Abs(dx1);
-                var dy1 = goal.z - prevGoal.y;
-                dy1 = dy1 / Math.Abs(dy1);
+                //var dx1 = goal.x - prevGoal.x;
+                //dx1 = dx1 / Math.Abs(dx1);
+                //var dy1 = goal.z - prevGoal.y;
+                //dy1 = dy1 / Math.Abs(dy1);
 
-                var dx2 = goal.x - route[1].x;
-                dx2 = dx2 / Math.Abs(dx2);
-                var dy2 = goal.z - route[1].y;
-                dy2 = dy2 / Math.Abs(dy2);
+                //var dx2 = goal.x - route[1].x;
+                //dx2 = dx2 / Math.Abs(dx2);
+                //var dy2 = goal.z - route[1].y;
+                //dy2 = dy2 / Math.Abs(dy2);
 
                 // if (dx1 == dx2 && dy1 == dy2) {
                 //     // raise error
@@ -285,14 +291,15 @@ namespace WebSocketTraffic
                 nextNode = route[1];
             }
 
-            // Set route ID to the last passed goal
-            currentRoadId = (int)route[0].z;
+            //currentRoadId = (int)route[0].z;
             goal = new Vector3(nextNode.x, 0, nextNode.y);
             speed = roadManager.roads[(int)nextNode.z].speedLimit;
             //currentRoadId = (int)nextNode.z;
             visited.Add(route[0]);
             prevGoal = route[0];
             route.RemoveAt(0);
+            if (route.Count > 0)
+                currentRoadId = (int)route[0].z; // Set current road ID to next road in advance to avoid vehicles from entering full roads
         }
 
         public bool ReachedGoal()
@@ -328,9 +335,10 @@ namespace WebSocketTraffic
                 speed = roadManager.roads[(int)msg.route[0].z].speedLimit;
                 //currentRoadId = (int)route[0].z;
                 transform.LookAt(goal);
+                //nextRoadLength = roadManager.roads[(int)msg.route[0].z].Length;
             }
 
-            running = true;
+            //running = true;
         }
 
         public void handleConstantUpdate(VehicleUpdateMessage msg) {     
@@ -373,7 +381,7 @@ namespace WebSocketTraffic
             //    Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
 
             // Use the same check for everything to maximise consistency
-            if (route.Count == 1 || Vector3.Distance(transform.position, prevGoal) < tolerance)
+            if (route.Count == 1 || Vector3.Distance(transform.position, new Vector3(prevGoal.x, 0, prevGoal.y)) < tolerance)
             {
                 // Vehicle has clipped into goal despite being stopped after triggering intersection's hitbox
                 return Physics.CheckBox(new Vector3(route[0].x, 0, route[0].y) + Vector3.up, new Vector3(1, .5f, 1),
