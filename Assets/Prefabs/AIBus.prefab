@@ -128,6 +128,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8917922807583990496, guid: ddcdb4981073a774cbbb38c889742c5b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8325435593210029290}
+    - targetCorrespondingSourceObject: {fileID: 8917922807583990496, guid: ddcdb4981073a774cbbb38c889742c5b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7363441020404941328}
   m_SourcePrefab: {fileID: 100100000, guid: ddcdb4981073a774cbbb38c889742c5b, type: 3}
 --- !u!1 &6784840495598769383 stripped
 GameObject:
@@ -155,3 +158,62 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.6946042, y: 3.31, z: 9.302494}
   m_Center: {x: -0.001397848, y: 1.9, z: -0.050180905}
+--- !u!114 &7363441020404941328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6784840495598769383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78c0fb7c393d4c3ba3e8b9cff055562e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  goal: {x: 0, y: 0, z: 0}
+  spawn: {x: 0, y: 0, z: 0}
+  location: {x: 0, y: 0, z: 0}
+  nextRoadLength: 0
+  nextRoadVehicleCount: 0
+  nextRoadFull: 0
+  nextGoalOccupied: 0
+  allowedRoad: 0
+  hasBeenQueued: 0
+  currentRoadId: -1
+  deadTime: 0
+  speed: 5
+  route: []
+  rotSpeed: 10
+  tolerance: 1.5
+  destTolerance: 5
+  roadManager: {fileID: 0}
+  tickMark: {fileID: 0}
+  raycastPoints: []
+  inFrontThreshold: 1
+  boxCollider: {fileID: 8325435593210029290}
+  vehicleCustomizer: {fileID: 0}
+  rb: {fileID: 9208972182524408286}
+  running: 0
+  emissionRate: 0
+  cumulativeEmission: 0
+  tripTime: 0
+  useAutoFlow: 0
+  idleTime: 0
+  blockedByIntersection: 0
+  currentIntersection: {fileID: 0}
+  trafficLights: {fileID: 0}
+  bypassCollisions: 0
+  currentSessionIdleTime: 0
+  passengerCount: 0
+  lineRenderer: {fileID: 0}
+  drawPathLine: 0
+  substepsPerTick: 3
+  visited: []
+  prevGoal: {x: 0, y: 0, z: 0}
+  systemRunning: 0
+--- !u!54 &9208972182524408286 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 6496051690526885849, guid: ddcdb4981073a774cbbb38c889742c5b, type: 3}
+  m_PrefabInstance: {fileID: 2732079622240630279}
+  m_PrefabAsset: {fileID: 0}
