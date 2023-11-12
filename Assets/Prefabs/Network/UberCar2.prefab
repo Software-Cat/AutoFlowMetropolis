@@ -108,10 +108,12 @@ MonoBehaviour:
   allowedRoad: 0
   hasBeenQueued: 0
   currentRoadId: 0
+  deadTime: 0
   speed: 5
   route: []
   rotSpeed: 13
   tolerance: 1
+  destTolerance: 5
   roadManager: {fileID: 0}
   tickMark: {fileID: 4400815997777263458}
   raycastPoints:
@@ -139,6 +141,7 @@ MonoBehaviour:
   substepsPerTick: 3
   visited: []
   prevGoal: {x: 0, y: 0, z: 0}
+  systemRunning: 0
 --- !u!114 &3509513200066379057
 MonoBehaviour:
   m_ObjectHideFlags: 0

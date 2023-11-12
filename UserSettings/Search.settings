@@ -11,6 +11,11 @@ scopes = {
 	"last_search.45C55C1A" = "material"
 	"OpenInspectorPreview.45C55C1A" = "0"
 	"currentGroup.45C55C1A" = "asset"
+	"picker_window_position_offset.0B486DF2" = "21;320;320;550"
+	"picker_search_text.0B486DF2" = ""
+	"last_search.0B486DF2" = ""
+	"OpenInspectorPreview.0B486DF2" = "0"
+	"currentGroup.0B486DF2" = null
 }
 providers = {
 	performance = {

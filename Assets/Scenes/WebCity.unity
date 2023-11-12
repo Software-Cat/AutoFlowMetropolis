@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1633,6 +1633,7 @@ MonoBehaviour:
   websocketHasInitialized: 0
   initialSpawner: {fileID: 635418625}
   vehicleManager: {fileID: 635418626}
+  amUpdating: 0
 --- !u!114 &635418625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1655,7 +1656,8 @@ MonoBehaviour:
   - name: LP
     obj: {fileID: 100000, guid: 7c90134339e11c64691a3099576dab12, type: 3}
   scaleFactor: 20
-  vehiclePrefab: {fileID: 188618460886333354, guid: 9b56ba8bae8dd0d45b655931a3ba2767, type: 3}
+  vehiclePrefab: {fileID: 6784840495598769383, guid: 906ae2846dfdb45a1b481e3dd4ecf294, type: 3}
+  busPrefab: {fileID: 6784840495598769383, guid: 906ae2846dfdb45a1b481e3dd4ecf294, type: 3}
   initMsg:
     tiles: []
     rowWidth: 0
@@ -1683,6 +1685,7 @@ MonoBehaviour:
   pendingUpdateMessage:
     updates: []
   canProcessPendingMessage: 0
+  isUpdating: 0
 --- !u!114 &635418627
 MonoBehaviour:
   m_ObjectHideFlags: 0

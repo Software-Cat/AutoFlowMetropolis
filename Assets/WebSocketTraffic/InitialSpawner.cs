@@ -10,6 +10,8 @@ namespace WebSocketTraffic
         public List<DummyTileKey> dummySerializedTileKeys;
         public float scaleFactor = 20f;
         public GameObject vehiclePrefab;
+
+        public GameObject busPrefab;
         public InitMessage initMsg;
 
         public int numOfRows;
