@@ -1656,7 +1656,7 @@ MonoBehaviour:
   - name: LP
     obj: {fileID: 100000, guid: 7c90134339e11c64691a3099576dab12, type: 3}
   scaleFactor: 20
-  vehiclePrefab: {fileID: 6784840495598769383, guid: 906ae2846dfdb45a1b481e3dd4ecf294, type: 3}
+  vehiclePrefab: {fileID: 188618460886333354, guid: 9b56ba8bae8dd0d45b655931a3ba2767, type: 3}
   busPrefab: {fileID: 6784840495598769383, guid: 906ae2846dfdb45a1b481e3dd4ecf294, type: 3}
   initMsg:
     tiles: []

@@ -16,7 +16,8 @@ namespace WebSocketTraffic
         public Vector3 location;
 
         public float nextRoadLength;
-        public int nextRoadVehicleCount;
+        public int nextRoadCarCount;
+        public int nextRoadBusCount;
         public bool nextRoadFull;
         public bool nextGoalOccupied = false;
         public bool allowedRoad = false;

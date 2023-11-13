@@ -6,14 +6,14 @@ namespace WebSocketTraffic
     public class VehicleManager : MonoBehaviour
     {
         public UpdateMessage pendingUpdateMessage;
-        public bool canProcessPendingMessage;
+        public bool canProcessPendingMessage = true;
         public Dictionary<int, Vehicle> vehicles = new();
 
         public bool isUpdating = false;
 
         private void Update()
         {
-            if (pendingUpdateMessage != null && canProcessPendingMessage)
+            if (pendingUpdateMessage != null && canProcessPendingMessage && pendingUpdateMessage.updates != null && pendingUpdateMessage.updates.Count != 0)
             {
                 foreach (var update in pendingUpdateMessage.updates)
                 {
@@ -41,6 +41,7 @@ namespace WebSocketTraffic
         public void HandleUpdateMessage(UpdateMessage msg)
         {
             pendingUpdateMessage = msg;
+            
         }
     }
 }

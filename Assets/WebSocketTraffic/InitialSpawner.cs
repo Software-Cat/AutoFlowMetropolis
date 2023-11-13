@@ -67,11 +67,14 @@ namespace WebSocketTraffic
         private void GenerateCars()
         {
             foreach (var vehicleMsg in initMsg.vehicles)
-            {
-                var currentCar = Instantiate(vehiclePrefab,
-                    vehicleMsg.Position,
-                    Quaternion.Euler(0, vehicleMsg.rotation, 0),
-                    transform);
+            {   
+                GameObject currentCar;
+                if (vehicleMsg.passengerCount >= 20) {
+                    currentCar = Instantiate(busPrefab, vehicleMsg.Position, Quaternion.Euler(0, vehicleMsg.rotation, 0), transform);
+                } else {
+                    currentCar = Instantiate(vehiclePrefab, vehicleMsg.Position, Quaternion.Euler(0, vehicleMsg.rotation, 0), transform);
+                }
+                
                 var vehicleComp = currentCar.GetComponent<Vehicle>();
                 vehicleComp.HandleInitMessage(vehicleMsg);
                 vehicleComp.roadManager = roadManager;

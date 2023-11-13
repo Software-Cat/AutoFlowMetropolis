@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 781503681673499503}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.5000001, z: -0, w: 0.8660253}
-  m_LocalPosition: {x: 1.8951999, y: 0.41360003, z: 0.15999985}
+  m_LocalPosition: {x: -1, y: 1, z: 5}
   m_LocalScale: {x: 0.8000001, y: 0.79999995, z: 0.8000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -87,7 +87,7 @@ Transform:
   m_GameObject: {fileID: 3291947539764082663}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 1.8951999, y: 0.41360003, z: -0}
+  m_LocalPosition: {x: 0, y: 1, z: 5}
   m_LocalScale: {x: 0.8000001, y: 0.79999995, z: 0.8000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -118,7 +118,7 @@ Transform:
   m_GameObject: {fileID: 5314502731165424131}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.8660255, z: -0, w: 0.49999988}
-  m_LocalPosition: {x: 1.8951999, y: 0.41360003, z: -0.1600002}
+  m_LocalPosition: {x: 1, y: 1, z: 5}
   m_LocalScale: {x: 0.79999995, y: 0.79999995, z: 0.79999995}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -185,15 +185,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4080641551706124963, guid: ddcdb4981073a774cbbb38c889742c5b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 4080641551706124963, guid: ddcdb4981073a774cbbb38c889742c5b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 4080641551706124963, guid: ddcdb4981073a774cbbb38c889742c5b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 4080641551706124963, guid: ddcdb4981073a774cbbb38c889742c5b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -395,7 +395,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.1, y: 4.3, z: 10.8}
+  m_Size: {x: 3, y: 3.3, z: 9.9}
   m_Center: {x: 0, y: 2, z: 0}
 --- !u!114 &7363441020404941328
 MonoBehaviour:
@@ -414,7 +414,8 @@ MonoBehaviour:
   spawn: {x: 0, y: 0, z: 0}
   location: {x: 0, y: 0, z: 0}
   nextRoadLength: 0
-  nextRoadVehicleCount: 0
+  nextRoadCarCount: 0
+  nextRoadBusCount: 0
   nextRoadFull: 0
   nextGoalOccupied: 0
   allowedRoad: 0

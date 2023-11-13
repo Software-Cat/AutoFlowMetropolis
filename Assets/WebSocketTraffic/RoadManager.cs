@@ -28,7 +28,7 @@ namespace WebSocketTraffic
             foreach (var road in msg.roads) roads[road.id] = road;
         }
 
-        public bool IsRoadFull(int roadId, int carCount)
+        public bool IsRoadFull(int roadId, int carCount, int busCount)
         {
             var len = roads[roadId].Length;
             //var carCount = vehicleManager.vehicles.Values.Count(v => v.currentRoadId == roadId && v.running);
@@ -40,9 +40,9 @@ namespace WebSocketTraffic
             //if (len < 40f)
             //    // Penalty for short roads as they get full too easily
             //    len -= 5f;
-            var density = carCount / len;
+            var spaceUsed = carCount * 5 + busCount * 10;
 
-            return density >= 0.19f;
+            return spaceUsed >= len * 0.9f;
         }
     }
 }

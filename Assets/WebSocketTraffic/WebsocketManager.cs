@@ -6,7 +6,7 @@ namespace WebSocketTraffic {
 
     public class WebsocketManager : MonoBehaviour
     {
-        public bool websocketHasInitialized;
+        public bool websocketHasInitialized = false;
         public InitialSpawner initialSpawner;
         public VehicleManager vehicleManager;
         private WebSocket ws;
