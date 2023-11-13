@@ -12,6 +12,8 @@ namespace WebSocketTraffic {
         private WebSocket ws;
         public bool amUpdating = false;
 
+        public float updateInterval = 5.0f;
+
         // Awake is called on loading
         private void Awake()
         {
@@ -20,8 +22,8 @@ namespace WebSocketTraffic {
                 HandleMessage(e.Data);
             ws.Connect();
 
-            // Send information every 5 seconds
-            InvokeRepeating("SendInfo", 5.0f, 5.0f);
+            // Send information every n seconds
+            InvokeRepeating("SendInfo", 10.0f, updateInterval);
         }
 
         
@@ -29,12 +31,12 @@ namespace WebSocketTraffic {
         private void SendInfo()
         {
             var vehicles = vehicleManager.vehicles;
-            Dictionary<int, List<float>> carInfo = new Dictionary<int, List<float>>();
             string updatemsg = "{";
 
             foreach (var pair in vehicles)
-            {   
+            {  
                 var vehicle = pair.Value;
+                if (vehicle.useAutoFlow == false) continue;
                 updatemsg += vehicle.id + ":{'Metadata':[";
                 updatemsg += vehicle.transform.position.x + "," + vehicle.transform.position.z + "," + vehicle.currentRoadId + "],'Routes':[";
                 foreach (var routenode in vehicle.route)
@@ -71,6 +73,10 @@ namespace WebSocketTraffic {
                 Debug.Log("update");
             } else {
                 var initMsg = JsonUtility.FromJson<InitMessage>(jsonMsg);
+                updateInterval = (float)initMsg.vehicles[0].id;
+                Debug.Log(updateInterval);
+                initMsg.vehicles.RemoveAt(0);
+
                 initialSpawner.HandleInitMessage(initMsg);
                 websocketHasInitialized = true;
                 initialSpawner.timeToSpawn = true;

@@ -388,8 +388,9 @@ namespace WebSocketTraffic
         {
             id = msg.id;
             emissionRate = msg.emissionRate / 1000f;
-            name = "Vehicle-" + id;
             useAutoFlow = msg.useAutoFlow;
+            if (useAutoFlow) name = "AutoFlow-" + id;
+            else name = "Selfish-" + id;
             passengerCount = msg.passengerCount;
             currentRoadId = msg.initRoadId; // May be overridden
         }
@@ -414,7 +415,7 @@ namespace WebSocketTraffic
         }
 
         public void handleConstantUpdate(VehicleUpdateMessage msg) {     
-            if (route.Count > 1)
+            if (route.Count > 1 && useAutoFlow)
             {   
                 route = msg.route;
                 while ((route.Count > 0) && visited.Contains(route[0])) route.RemoveAt(0);
