@@ -417,8 +417,9 @@ namespace WebSocketTraffic
         public void handleConstantUpdate(VehicleUpdateMessage msg) {     
             if (route.Count > 1 && useAutoFlow)
             {   
+                while ((msg.route.Count > 0) && visited.Contains(msg.route[0])) msg.route.RemoveAt(0);
                 route = msg.route;
-                while ((route.Count > 0) && visited.Contains(route[0])) route.RemoveAt(0);
+                
             }
 
         }
