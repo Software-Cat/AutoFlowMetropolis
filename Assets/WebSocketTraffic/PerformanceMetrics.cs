@@ -22,14 +22,21 @@ namespace WebSocketTraffic
             var cumulEm = 0f;
             for (var i = 0; i < vehicleManager.vehicles.Count; i++) {
                 var vehicle = vehicleManager.vehicles[i];
-                cumulEm += vehicle.cumulativeEmission;
+                var trip = vehicle.tripTime;
+                var idle = vehicle.idleTime;
+                var emission = vehicle.cumulativeEmission;
+                
+                if (trip == 0) continue;
+                var emissionPerSecond = emission / trip;
+                var projectedIdleEmission = emissionPerSecond * idle * 2;
+                cumulEm += emission + projectedIdleEmission;
             }
             emissionsText.text = "Cumulative Emissions: " + cumulEm + "kg CO2";
 
-            var cumulTime = vehicleManager.vehicles.Values.Sum(vehicle => vehicle.tripTime);
+            var cumulTime = vehicleManager.vehicles.Values.Sum(vehicle => (vehicle.tripTime + vehicle.idleTime) * vehicle.passengerCount);
             tripTimeText.text = "Cumulative Trip Time: " + cumulTime + "s";
 
-            var cumulIdleTime = vehicleManager.vehicles.Values.Sum(vehicle => vehicle.idleTime);
+            var cumulIdleTime = vehicleManager.vehicles.Values.Sum(vehicle => vehicle.idleTime * vehicle.passengerCount);
             idleTimeText.text = "Cumulative Idle Time: " + cumulIdleTime + "s";
         }
     }

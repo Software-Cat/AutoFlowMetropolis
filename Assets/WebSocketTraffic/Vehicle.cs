@@ -148,9 +148,9 @@ namespace WebSocketTraffic
             // Blocked by car in front or traffic light
             if (blockedByIntersection || DetectObstacleByRaycast())
             {
-                idleTime += Time.deltaTime * passengerCount;
-                tripTime += Time.deltaTime * passengerCount;
-                cumulativeEmission += 2 * speed * Time.deltaTime * emissionRate; // idle emission
+                idleTime += Time.deltaTime;
+                //tripTime += Time.deltaTime * passengerCount;
+                //cumulativeEmission += 2 * speed * Time.deltaTime * emissionRate; // idle emission
                 return;
             }
             // var curRoad = roadManager.roads[currentRoadId];
@@ -163,7 +163,8 @@ namespace WebSocketTraffic
             //     positionOnRoad = -1f;
             // }
 
-            tripTime += Time.deltaTime * passengerCount;
+            tripTime += Time.deltaTime;
+            cumulativeEmission += speed * Time.deltaTime * emissionRate;
 
             // Directions
             var position = transform.position;
@@ -207,20 +208,6 @@ namespace WebSocketTraffic
                 currentSessionIdleTime = 0;
                 cumulativeEmission += speed * Time.deltaTime * emissionRate;
             }
-            // else if (useAutoFlow)
-            // {
-            //     transform.Translate(-transform.forward * (speed * Time.deltaTime * .01f), Space.World);
-            //     idleTime += Time.deltaTime;
-            // }
-            else
-            {
-                idleTime += Time.deltaTime * passengerCount;
-                currentSessionIdleTime += Time.deltaTime;
-                cumulativeEmission += 2 * speed * Time.deltaTime * emissionRate; // idle emission
-            }
-
-            // Collision bypass (likely cars gridlocked)
-            //if (currentSessionIdleTime >= 100f) StartCoroutine(BeginBypassCollisions());
         }
 
         private void OnDrawGizmos()

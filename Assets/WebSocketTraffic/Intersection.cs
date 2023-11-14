@@ -210,14 +210,14 @@ namespace WebSocketTraffic
         {
             while (true)
             {
-                // Wait with green
-                //if (useAutoFlow && queuingVehicles.All(v => v.currentRoadId != currentAllowedId))
-                //     If no cars in this direction, skip its green light
-                //    yield return new WaitForSeconds(0.6f);
-                //else
-                //    yield return new WaitForSeconds(greenDuration);
+                // // Wait with green
+                // //if (useAutoFlow && queuingVehicles.All(v => v.currentRoadId != currentAllowedId))
+                // //     If no cars in this direction, skip its green light
+                // //    yield return new WaitForSeconds(0.6f);
+                // //else
+                // //    yield return new WaitForSeconds(greenDuration);
 
-                // Wait for traffic light
+                // // Wait for traffic light
                 yield return new WaitForSeconds(greenDuration);
 
                 // Yellow light
