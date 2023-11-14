@@ -151,12 +151,12 @@ namespace WebSocketTraffic
                 vehicle.nextRoadLength = manager.roadManager.roads[(int)vehicle.route[0].z].Length;
                 vehicle.nextRoadCarCount = manager.roadManager.vehicleManager.vehicles.Values.Count(v => v.currentRoadId == (int)vehicle.route[0].z && v.running && v.passengerCount < 20);
                 vehicle.nextRoadBusCount = manager.roadManager.vehicleManager.vehicles.Values.Count(v => v.currentRoadId == (int)vehicle.route[0].z && v.running && v.passengerCount >= 20);
-                vehicle.nextRoadFull = manager.roadManager.IsRoadFull((int)vehicle.route[0].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount);
+                vehicle.nextRoadFull = manager.roadManager.IsRoadFull((int)vehicle.route[0].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount, vehicle.passengerCount >= 20);
                 vehicle.nextGoalOccupied = vehicle.IsNextGoalOccupied();
                 vehicle.allowedRoad = (int)vehicle.prevGoal.z == currentAllowedId;
                 // Vehicle has clipped into goal despite being stopped after triggering intersection's hitbox
                 canEnter = (int)vehicle.prevGoal.z == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
-                            !manager.roadManager.IsRoadFull((int)vehicle.route[0].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount) &&
+                            !manager.roadManager.IsRoadFull((int)vehicle.route[0].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount, vehicle.passengerCount >= 20) &&
                             !inYellowPhase;
                 //if (canEnter)
                 //    vehicle.currentRoadId = (int)vehicle.route[0].z; // Adding car to the next road as soon as it leaves its previous road
@@ -165,12 +165,12 @@ namespace WebSocketTraffic
                 vehicle.nextRoadLength = manager.roadManager.roads[(int)vehicle.route[1].z].Length;
                 vehicle.nextRoadCarCount = manager.roadManager.vehicleManager.vehicles.Values.Count(v => v.currentRoadId == (int)vehicle.route[1].z && v.running && v.passengerCount < 20);
                 vehicle.nextRoadBusCount = manager.roadManager.vehicleManager.vehicles.Values.Count(v => v.currentRoadId == (int)vehicle.route[1].z && v.running && v.passengerCount >= 20);
-                vehicle.nextRoadFull = manager.roadManager.IsRoadFull((int)vehicle.route[1].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount);
+                vehicle.nextRoadFull = manager.roadManager.IsRoadFull((int)vehicle.route[1].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount, vehicle.passengerCount >= 20);
                 vehicle.nextGoalOccupied = vehicle.IsNextGoalOccupied();
                 vehicle.allowedRoad = vehicle.currentRoadId == currentAllowedId;
                 // Vehicle has not yet reached the goal at the end of the road and is stopped after triggering intersection's hitbox
                 canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
-                            !manager.roadManager.IsRoadFull((int)vehicle.route[1].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount) &&
+                            !manager.roadManager.IsRoadFull((int)vehicle.route[1].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount, vehicle.passengerCount >= 20) &&
                             !inYellowPhase;
                 //if (canEnter)
                 //    vehicle.currentRoadId = (int)vehicle.route[1].z; // Adding car to the next road as soon as it leaves its previous road

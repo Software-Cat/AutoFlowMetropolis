@@ -404,8 +404,13 @@ namespace WebSocketTraffic
         public void handleConstantUpdate(VehicleUpdateMessage msg) {     
             if (route.Count > 1 && useAutoFlow)
             {   
-                while ((msg.route.Count > 0) && visited.Contains(msg.route[0])) msg.route.RemoveAt(0);
-                route = msg.route;
+                while ((msg.route.Count > 1) && visited.Contains(msg.route[0])) msg.route.RemoveAt(0);
+                var first = msg.route[0];
+                first = new Vector3(first.x, 0, first.y);
+
+                if (Vector3.Distance(transform.position, first) <= 30f) {
+                    route = msg.route;
+                }
                 
             }
 
