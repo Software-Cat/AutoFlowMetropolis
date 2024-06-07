@@ -6,7 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Landing.unity
+    guid: 77c81bb19df21e74688b594360651e11
+  - enabled: 1
+    path: Assets/Scenes/SimConfig.unity
+    guid: dd1fd4884636b5742bf6e472c1773d82
+  - enabled: 1
     path: Assets/Scenes/WebCity.unity
     guid: b5969fb519e590e46bd0b2fe173d8ff2
   m_configObjects: {}
-  m_UseUCBPForAssetBundles: 0
