@@ -9,10 +9,17 @@ namespace WebSocketTraffic {
         public bool websocketHasInitialized = false;
         public InitialSpawner initialSpawner;
         public VehicleManager vehicleManager;
+
+        public SimConfig simConfig;
         private WebSocket ws;
         public bool amUpdating = false;
 
+
         public float updateInterval = 5.0f;
+
+        public float vehicleDensity, autoFlowPercent, mapSize;
+        public int selectedIndex;
+        public bool fullDay, receiveNewDests, graphics, procedural;
 
         // Awake is called on loading
         private void Awake()
@@ -22,8 +29,32 @@ namespace WebSocketTraffic {
                 HandleMessage(e.Data);
             ws.Connect();
 
+            vehicleDensity = PlayerPrefs.GetFloat("vehicleDensity", 0f);
+            autoFlowPercent = PlayerPrefs.GetFloat("autoFlowPercent", 0f);
+            mapSize = PlayerPrefs.GetFloat("mapSize", 0f);
+            selectedIndex = PlayerPrefs.GetInt("selectedIndex", 0);
+            fullDay = PlayerPrefs.GetInt("fullDay", 0) == 1;
+            receiveNewDests = PlayerPrefs.GetInt("receiveNewDests", 0) == 1;
+            graphics = PlayerPrefs.GetInt("graphics", 0) == 1;
+            procedural = PlayerPrefs.GetInt("procedural", 0) == 1;
+
+            string generateMsg = "{" +
+                "'vehicleDensity':" + vehicleDensity + "," +
+                "'autoFlowPercent':" + autoFlowPercent + "," +
+                "'mapSize':" + mapSize + "," +
+                "'selectedIndex':" + selectedIndex + "," +
+                "'fullDay':" + (fullDay ? 1 : 0) + "," +
+                "'receiveNewDests':" + (receiveNewDests ? 1 : 0) + "," +
+                "'graphics':" + (graphics ? 1 : 0) + "," +
+                "'procedural':" + (procedural ? 1 : 0) + "}";
+            ws.Send(generateMsg);
+
             // Send information every n seconds
             InvokeRepeating("SendInfo", 10.0f, updateInterval);
+        }
+
+        void OnEnable() {
+            
         }
 
         

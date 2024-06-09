@@ -32,6 +32,18 @@ namespace WebSocketTraffic {
             // Handle any updates here
         }
 
+        void OnDisable()
+        {
+            PlayerPrefs.SetFloat("vehicleDensity", vehicleDensity);
+            PlayerPrefs.SetFloat("autoFlowPercent", autoFlowPercent);
+            PlayerPrefs.SetFloat("mapSize", mapSize);
+            PlayerPrefs.SetInt("selectedIndex", selectedIndex);
+            PlayerPrefs.SetInt("fullDay", fullDay ? 1 : 0);
+            PlayerPrefs.SetInt("receiveNewDests", receiveNewDests ? 1 : 0);
+            PlayerPrefs.SetInt("graphics", graphics ? 1 : 0);
+            PlayerPrefs.SetInt("procedural", procedural ? 1 : 0);
+        }
+
         Texture2D CreateTextureWithBorder(int width, int height, Color borderColor, int borderThickness)
         {
             Texture2D texture = new Texture2D(width, height);
@@ -181,12 +193,6 @@ namespace WebSocketTraffic {
             {
                 SceneManager.LoadScene("Landing");
             }
-
-
-
-
-
-
 
         }
 
