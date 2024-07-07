@@ -25,7 +25,9 @@ namespace WebSocketTraffic
 
         public void HandleInitMessage(InitMessage msg)
         {
-            foreach (var road in msg.roads) roads[road.id] = road;
+            foreach (var road in msg.roads) {
+                roads[road.id] = road;
+            }
         }
 
         public bool IsRoadFull(int roadId, int carCount, int busCount, bool isBus)

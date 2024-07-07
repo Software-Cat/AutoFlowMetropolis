@@ -280,6 +280,41 @@ namespace WebSocketTraffic
         public void OnReachGoal()
         {
 
+            var rand = UnityEngine.Random.Range(0f, 1f);
+            var currentRoad = roadManager.roads[currentRoadId];
+            if (rand <= 0.01f && currentRoad.RealEndPos == goal && currentRoad.neighbors.Count > 1) {
+
+                // gives 3 randomly generated next waypoints for the car to travel in, until it receives its new route
+                var neighbors = currentRoad.neighbors;
+                var nextRoadId = neighbors[UnityEngine.Random.Range(0, neighbors.Count)];
+                var nextRoad = roadManager.roads[nextRoadId];
+                prevGoal = goal;
+                goal = nextRoad.RealStartPos;
+                speed = nextRoad.speedLimit;
+                currentRoadId = nextRoadId;
+                route = new List<Vector3>();
+                route.Add(new Vector3(goal.x, goal.z, nextRoadId));
+                visited.Add(prevGoal);
+
+                Debug.Log($"Car {id} is changing road to {nextRoadId}");
+
+                // add the end of the road to the route
+                var endOfRoad = nextRoad.RealEndPos;
+                route.Add(new Vector3(endOfRoad.x, endOfRoad.z, nextRoadId));
+
+                // add some more randomly generated turns
+                for (var i = 0; i < 3; i++) {
+                    neighbors = nextRoad.neighbors;
+                    nextRoadId = neighbors[UnityEngine.Random.Range(0, neighbors.Count)];
+                    nextRoad = roadManager.roads[nextRoadId];
+                    route.Add(new Vector3(nextRoad.RealStartPos.x, nextRoad.RealStartPos.z, nextRoadId));
+                    endOfRoad = nextRoad.RealEndPos;
+                    route.Add(new Vector3(endOfRoad.x, endOfRoad.z, nextRoadId));
+                }
+
+                return;
+            }
+
             Vector3 nextNode;
 
             if (route.Count == 0) {
@@ -298,27 +333,7 @@ namespace WebSocketTraffic
 
             if (route.Count == 1) {
                 nextNode = route[0];
-            } else {
-                //var dx1 = goal.x - prevGoal.x;
-                //dx1 = dx1 / Math.Abs(dx1);
-                //var dy1 = goal.z - prevGoal.y;
-                //dy1 = dy1 / Math.Abs(dy1);
-
-                //var dx2 = goal.x - route[1].x;
-                //dx2 = dx2 / Math.Abs(dx2);
-                //var dy2 = goal.z - route[1].y;
-                //dy2 = dy2 / Math.Abs(dy2);
-
-                // if (dx1 == dx2 && dy1 == dy2) {
-                //     // raise error
-                //     Debug.Log("Error: Vehicle " + id);
-                //     Debug.Log("prevGoal: " + prevGoal);
-                //     Debug.Log("goal: " + goal);
-                //     Debug.Log("route[1]: " + route[1]);
-                //     route.RemoveAt(0);
-
-                // }
-                
+            } else { 
                 nextNode = route[1];
             }
 
@@ -402,13 +417,14 @@ namespace WebSocketTraffic
         }
 
         public void handleConstantUpdate(VehicleUpdateMessage msg) {     
-            if (route.Count > 1 && useAutoFlow)
+            if (route.Count > 1)
             {   
                 while ((msg.route.Count > 1) && visited.Contains(msg.route[0])) msg.route.RemoveAt(0);
                 var first = msg.route[0];
                 first = new Vector3(first.x, 0, first.y);
 
                 if (Vector3.Distance(transform.position, first) <= 30f) {
+                    Debug.Log($"Car {id} is updating route");
                     route = msg.route;
                 }
                 

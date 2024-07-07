@@ -67,7 +67,6 @@ namespace WebSocketTraffic {
             foreach (var pair in vehicles)
             {  
                 var vehicle = pair.Value;
-                if (vehicle.useAutoFlow == false) continue;
                 updatemsg += vehicle.id + ":{'Metadata':[";
                 updatemsg += vehicle.transform.position.x + "," + vehicle.transform.position.z + "," + vehicle.currentRoadId + "],'Routes':[";
                 foreach (var routenode in vehicle.route)
