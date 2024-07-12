@@ -44,8 +44,10 @@ namespace WebSocketTraffic {
             PlayerPrefs.SetInt("roadBlockage", roadBlockage ? 1 : 0);
         }
 
-        Texture2D CreateTextureWithBorder(int width, int height, Color borderColor, int borderThickness)
+        Texture2D CreateTextureWithBorder(float w, float h, Color borderColor, int borderThickness)
         {
+            int width = (int)w;
+            int height = (int)h;
             Texture2D texture = new Texture2D(width, height);
             for (int x = 0; x < width; x++)
             {
@@ -85,18 +87,21 @@ namespace WebSocketTraffic {
             buttonTexture.SetPixel(0, 0, new Color(0.945f, 0.945f, 0.945f, 1f));
             buttonTexture.Apply();
 
+            float horScale = Screen.width / 1920f;
+            float verScale = Screen.height / 1080f;
+
             gridStyle.normal.background = buttonTexture;
             gridStyle.hover.background = buttonTexture; 
             gridStyle.active.background = buttonTexture; 
 
-            int optionWidth = 565;
-            int optionHeight = 100;
-            int spaceBetweenOptions = 15;
+            float optionWidth = 565 * horScale;
+            float optionHeight = 100 * verScale;
+            float spaceBetweenOptions = 15 * verScale;
 
             for (int i = 0; i < options.Length; i++)
             {
-                float buttonY = 250 + i * (optionHeight + spaceBetweenOptions);
-                Rect buttonRect = new Rect(270, buttonY, optionWidth, optionHeight);
+                float buttonY = 250 * verScale + i * (optionHeight + spaceBetweenOptions);
+                Rect buttonRect = new Rect(270 * horScale, buttonY, optionWidth, optionHeight);
 
                 // Check if the current button is selected
                 if (selectedIndex == i)
@@ -123,7 +128,8 @@ namespace WebSocketTraffic {
             float sliderMaxValue = 100f; // Maximum value of the slider
 
             // Create the Rect for the slider
-            Rect sliderRect = new Rect(1100, 300, 400, 20); 
+            
+            Rect sliderRect = new Rect(1100*horScale, 300*verScale, 400*horScale, 20*verScale); 
 
             // Before drawing the slider, set the colors
             Color sliderBackgroundColor = new Color(0.93f, 0.93f, 0.93f, 1f);
@@ -146,16 +152,16 @@ namespace WebSocketTraffic {
             labelStyle1.fontSize = 15;
             labelStyle1.normal.textColor = new Color(0f, 0f, 0f, 1f); 
             labelStyle1.hover.textColor = new Color(0f, 0f, 0f, 1f); 
-            GUI.Label(new Rect(1550, 290, 100, 40), vehicleDensity.ToString("F0") + "%", labelStyle1);
+            GUI.Label(new Rect(1550*horScale, 290*verScale, 100*horScale, 40*verScale), vehicleDensity.ToString("F0") + "%", labelStyle1);
 
 
-            Rect sliderRect2 = new Rect(1100, 400, 400, 20);
+            Rect sliderRect2 = new Rect(1100*horScale, 400*verScale, 400*horScale, 20*verScale);
             autoFlowPercent = GUI.HorizontalSlider(sliderRect2, autoFlowPercent, sliderMinValue, sliderMaxValue);
-            GUI.Label(new Rect(1550, 390, 100, 40), autoFlowPercent.ToString("F0") + "%", labelStyle1);
+            GUI.Label(new Rect(1550*horScale, 390*verScale, 100*horScale, 40*verScale), autoFlowPercent.ToString("F0") + "%", labelStyle1);
 
-            Rect sliderRect3 = new Rect(1100, 490, 400, 20);
+            Rect sliderRect3 = new Rect(1100*horScale, 490*verScale, 400*horScale, 20*verScale);
             mapSize = GUI.HorizontalSlider(sliderRect3, mapSize, sliderMinValue, sliderMaxValue);
-            GUI.Label(new Rect(1550, 480, 100, 40), mapSize.ToString("F0") + "%", labelStyle1);
+            GUI.Label(new Rect(1550*horScale, 480*verScale, 100*horScale, 40*verScale), mapSize.ToString("F0") + "%", labelStyle1);
 
             // toggle
             GUIStyle toggleStyle = new GUIStyle(GUI.skin.toggle);
@@ -165,18 +171,18 @@ namespace WebSocketTraffic {
             toggleStyle.hover.textColor = new Color(0f, 0f, 0f, 1f);
             toggleStyle.padding = new RectOffset(40, 10, 10, 10);
             toggleStyle.active.textColor = new Color(0.16f, 0.43f, 0.87f, 1f);
-            Rect toggleRect = new Rect(1100, 580, 60, 60);
+            Rect toggleRect = new Rect(1100*horScale, 580*verScale, 60*horScale, 60*verScale);
             fullDay = GUI.Toggle(toggleRect, fullDay, "", toggleStyle);
-            Rect toggleRect2 = new Rect(1100, 680, 60, 60);
+            Rect toggleRect2 = new Rect(1100*horScale, 680*verScale, 60*horScale, 60*verScale);
             graphics = GUI.Toggle(toggleRect2, graphics, "", toggleStyle);
-            Rect toggleRect3 = new Rect(1260, 580, 60, 60);
+            Rect toggleRect3 = new Rect(1260*horScale, 580*verScale, 60*horScale, 60*verScale);
             receiveNewDests = GUI.Toggle(toggleRect3, receiveNewDests, "", toggleStyle);
-            Rect toggleRect4 = new Rect(1260, 680, 60, 60);
+            Rect toggleRect4 = new Rect(1260*horScale, 680*verScale, 60*horScale, 60*verScale);
             roadBlockage = GUI.Toggle(toggleRect4, roadBlockage, "", toggleStyle);
 
             // button
             GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
-            Rect buttonRect2 = new Rect(1370, 800, 270, 200);
+            Rect buttonRect2 = new Rect(1370*horScale, 800*verScale, 270*horScale, 200*verScale);
             Texture2D buttonTexture2 = new Texture2D(1, 1);
             buttonTexture2.SetPixel(0, 0, new Color(0f, 0f, 0f, 0f));
             buttonTexture2.Apply();
@@ -188,7 +194,7 @@ namespace WebSocketTraffic {
                 SceneManager.LoadScene("WebCity");
             }
 
-            Rect buttonRect3 = new Rect(1050, 800, 270, 200);
+            Rect buttonRect3 = new Rect(1050*horScale, 800*verScale, 270*horScale, 200*verScale);
             if (GUI.Button(buttonRect3, "", buttonStyle))
             {
                 SceneManager.LoadScene("Landing");

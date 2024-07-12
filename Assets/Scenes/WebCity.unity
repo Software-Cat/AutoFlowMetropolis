@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -67,6 +66,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -226,6 +228,7 @@ GameObject:
   - component: {fileID: 88983926}
   - component: {fileID: 88983927}
   - component: {fileID: 88983928}
+  - component: {fileID: 88983929}
   m_Layer: 0
   m_Name: FollowVCam
   m_TagString: Untagged
@@ -313,6 +316,19 @@ MonoBehaviour:
   progressBar: {fileID: 787662377}
   totalNodes: 0
   algoText: {fileID: 1128199989}
+--- !u!114 &88983929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88983925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3db2be82c64471f9591eba811929a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetAspect: 1.7777778
 --- !u!1 &114440795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1633,7 +1649,17 @@ MonoBehaviour:
   websocketHasInitialized: 0
   initialSpawner: {fileID: 635418625}
   vehicleManager: {fileID: 635418626}
+  simConfig: {fileID: 0}
   amUpdating: 0
+  updateInterval: 5
+  vehicleDensity: 0
+  autoFlowPercent: 0
+  mapSize: 0
+  selectedIndex: 0
+  fullDay: 0
+  receiveNewDests: 0
+  graphics: 0
+  roadBlockage: 0
 --- !u!114 &635418625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3446,6 +3472,7 @@ GameObject:
   - component: {fileID: 1564592439}
   - component: {fileID: 1564592440}
   - component: {fileID: 1564592441}
+  - component: {fileID: 1564592442}
   m_Layer: 0
   m_Name: FreeFlyVCam
   m_TagString: Untagged
@@ -3533,6 +3560,19 @@ MonoBehaviour:
   Right: 100
   Up: 113
   Down: 101
+--- !u!114 &1564592442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564592438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3db2be82c64471f9591eba811929a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetAspect: 1.7777778
 --- !u!1 &1569162006
 GameObject:
   m_ObjectHideFlags: 0
@@ -4217,6 +4257,7 @@ GameObject:
   - component: {fileID: 1905363189}
   - component: {fileID: 1905363188}
   - component: {fileID: 1905363187}
+  - component: {fileID: 1905363192}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -4311,12 +4352,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!81 &1905363189
 AudioListener:
   m_ObjectHideFlags: 0
@@ -4384,6 +4425,19 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1905363192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905363185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3db2be82c64471f9591eba811929a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetAspect: 1.7777778
 --- !u!1 &1911555086
 GameObject:
   m_ObjectHideFlags: 0
@@ -5295,12 +5349,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!20 &2080468804
 Camera:
   m_ObjectHideFlags: 0

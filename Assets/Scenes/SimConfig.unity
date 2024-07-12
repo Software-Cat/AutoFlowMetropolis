@@ -658,7 +658,7 @@ MonoBehaviour:
   fullDay: 0
   receiveNewDests: 0
   graphics: 0
-  procedural: 0
+  roadBlockage: 0
 --- !u!1 &2033566136
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,6 +671,7 @@ GameObject:
   - component: {fileID: 2033566138}
   - component: {fileID: 2033566137}
   - component: {fileID: 2033566140}
+  - component: {fileID: 2033566141}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -796,6 +797,19 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &2033566141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033566136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3db2be82c64471f9591eba811929a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetAspect: 1.7777778
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
