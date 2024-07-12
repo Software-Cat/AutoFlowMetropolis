@@ -18,7 +18,7 @@ namespace WebSocketTraffic {
         public bool fullDay = false;
         public bool receiveNewDests = false;
         public bool graphics = false;
-        public bool procedural = false;
+        public bool roadBlockage = false;
 
         // Start is called before the first frame update
         void Start()
@@ -41,7 +41,7 @@ namespace WebSocketTraffic {
             PlayerPrefs.SetInt("fullDay", fullDay ? 1 : 0);
             PlayerPrefs.SetInt("receiveNewDests", receiveNewDests ? 1 : 0);
             PlayerPrefs.SetInt("graphics", graphics ? 1 : 0);
-            PlayerPrefs.SetInt("procedural", procedural ? 1 : 0);
+            PlayerPrefs.SetInt("roadBlockage", roadBlockage ? 1 : 0);
         }
 
         Texture2D CreateTextureWithBorder(int width, int height, Color borderColor, int borderThickness)
@@ -86,8 +86,8 @@ namespace WebSocketTraffic {
             buttonTexture.Apply();
 
             gridStyle.normal.background = buttonTexture;
-            gridStyle.hover.background = buttonTexture; // Use the same or different texture for hover
-            gridStyle.active.background = buttonTexture; // Use the same or different texture for active
+            gridStyle.hover.background = buttonTexture; 
+            gridStyle.active.background = buttonTexture; 
 
             int optionWidth = 565;
             int optionHeight = 100;
@@ -172,7 +172,7 @@ namespace WebSocketTraffic {
             Rect toggleRect3 = new Rect(1260, 580, 60, 60);
             receiveNewDests = GUI.Toggle(toggleRect3, receiveNewDests, "", toggleStyle);
             Rect toggleRect4 = new Rect(1260, 680, 60, 60);
-            procedural = GUI.Toggle(toggleRect4, procedural, "", toggleStyle);
+            roadBlockage = GUI.Toggle(toggleRect4, roadBlockage, "", toggleStyle);
 
             // button
             GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);

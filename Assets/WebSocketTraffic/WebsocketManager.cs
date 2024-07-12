@@ -19,7 +19,7 @@ namespace WebSocketTraffic {
 
         public float vehicleDensity, autoFlowPercent, mapSize;
         public int selectedIndex;
-        public bool fullDay, receiveNewDests, graphics, procedural;
+        public bool fullDay, receiveNewDests, graphics, roadBlockage;
 
         // Awake is called on loading
         private void Awake()
@@ -36,7 +36,7 @@ namespace WebSocketTraffic {
             fullDay = PlayerPrefs.GetInt("fullDay", 0) == 1;
             receiveNewDests = PlayerPrefs.GetInt("receiveNewDests", 0) == 1;
             graphics = PlayerPrefs.GetInt("graphics", 0) == 1;
-            procedural = PlayerPrefs.GetInt("procedural", 0) == 1;
+            roadBlockage = PlayerPrefs.GetInt("roadBlockage", 0) == 1;
 
             string generateMsg = "{" +
                 "'vehicleDensity':" + vehicleDensity + "," +
@@ -46,8 +46,9 @@ namespace WebSocketTraffic {
                 "'fullDay':" + (fullDay ? 1 : 0) + "," +
                 "'receiveNewDests':" + (receiveNewDests ? 1 : 0) + "," +
                 "'graphics':" + (graphics ? 1 : 0) + "," +
-                "'procedural':" + (procedural ? 1 : 0) + "}";
+                "'roadBlockage':" + (roadBlockage ? 1 : 0) + "}";
             ws.Send(generateMsg);
+            Debug.Log("Sent message: " + generateMsg);
 
             // Send information every n seconds
             InvokeRepeating("SendInfo", 10.0f, updateInterval);

@@ -55,6 +55,8 @@ namespace WebSocketTraffic
         public LineRenderer lineRenderer;
         public bool drawPathLine;
         public int substepsPerTick = 3;
+        public float accelerationMPSS = 0f;
+        public float currentSpeed = 0f;
 
         private int carMask;
 
@@ -95,9 +97,18 @@ namespace WebSocketTraffic
             }
         }
 
+         public void scaleSize(float scale)
+        {
+            transform.localScale = new Vector3(scale * transform.localScale.x, scale * transform.localScale.y, scale * transform.localScale.z);
+        }
+
         private void Awake()
         {
             carMask = 1 << LayerMask.NameToLayer("AutonomousVehicle");
+            // random scaling factor
+            float scale = UnityEngine.Random.Range(0.9f, 1.1f);
+            scaleSize(scale);
+            accelerationMPSS = UnityEngine.Random.Range(5f, 20f);
         }
 
         private void Reset()
@@ -108,6 +119,8 @@ namespace WebSocketTraffic
             trafficLights = GetComponent<TrafficLights>();
             lineRenderer = GetComponent<LineRenderer>();
         }
+
+       
 
         private void FixedUpdate()
         {
@@ -199,14 +212,23 @@ namespace WebSocketTraffic
                     //     var roadRotation = Quaternion.LookRotation(roadDir);
                     //     transform.rotation = roadRotation;
                     // }
+                    
+                    
 
-                    transform.Translate(dirToGoal * (speed * Time.deltaTime / substepsPerTick), Space.World);
+                    if (currentSpeed < speed) {
+                        currentSpeed += accelerationMPSS * Time.deltaTime;
+                        if (currentSpeed > speed) {
+                            currentSpeed = speed; // Ensure we don't exceed the target speed
+                        }
+                    }
+
+                    transform.Translate(dirToGoal * (currentSpeed * Time.deltaTime / substepsPerTick), Space.World);
                     if (DetectObstacleByRaycast()) break;
                     if (ReachedGoal()) break;
                 }
 
                 currentSessionIdleTime = 0;
-                cumulativeEmission += speed * Time.deltaTime * emissionRate;
+                cumulativeEmission += currentSpeed * Time.deltaTime * emissionRate;
             }
         }
 
@@ -431,6 +453,8 @@ namespace WebSocketTraffic
             }
 
         }
+
+        
 
         public IEnumerator BeginBypassCollisions()
         {
