@@ -102,7 +102,7 @@ namespace WebSocketTraffic
 
         private void HandleDeceleration(Vector3 acceleration)
         {
-            //deceleration functionality
+            // deceleration functionality
             if (Mathf.Approximately(Mathf.Abs(acceleration.x), 0))
             {
                 if (Mathf.Abs(_moveSpeed.x) < DecelerationMod)

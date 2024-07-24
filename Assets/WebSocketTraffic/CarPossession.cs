@@ -70,21 +70,15 @@ namespace WebSocketTraffic
                 // Direction
                 if (target.route.Count > 1)
                 {
-                    var angle = Vector3.SignedAngle(trans.forward, target.goal - trans.position,
-                        Vector3.up);
+                    var angle = Vector3.SignedAngle(trans.forward, target.goal - trans.position, Vector3.up);
                     var nextGoal = new Vector3(target.route[1].x, 0, target.route[1].z);
-                    if (angle > 5f)
-                    {
+                    if (angle > 5f) {
                         directionText.text = "Turn Right";
                         timeSinceLastTurn = 0f;
-                    }
-                    else if (angle < -5f)
-                    {
+                    } else if (angle < -5f) {
                         directionText.text = "Turn Left";
                         timeSinceLastTurn = 0f;
-                    }
-                    else
-                    {
+                    } else {
                         timeSinceLastTurn += Time.deltaTime;
                     }
 
@@ -95,11 +89,6 @@ namespace WebSocketTraffic
                 timeLeftText.text = target.route.Count + " minutes";
 
                 if (totalNodes != 0)
-                    // foreach (var vehicle in vehicleManager.vehicles.Values)
-                    // foreach (var other in vehicleManager.vehicles.Values)
-                    //     if (!vehicle == other)
-                    //         if (Vector3.Distance(vehicle.transform.position, other.transform.position) < 0.8f)
-                    //             Debug.Log(vehicle);
                     // Progress bar
                     progressBar.Percent = 1 - (float)target.route.Count / totalNodes;
             }

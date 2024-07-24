@@ -21,7 +21,7 @@ namespace WebSocketTraffic {
         public int selectedIndex;
         public bool fullDay, receiveNewDests, graphics, roadBlockage;
 
-        // Awake is called on loading
+        // Awake is called on loading -> gets simulation configuration from player prefs
         private void Awake()
         {
             ws = new WebSocket("ws://localhost:8001/");
