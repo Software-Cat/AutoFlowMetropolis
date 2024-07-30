@@ -189,32 +189,10 @@ namespace WebSocketTraffic
             {
                 for (var i = 0; i < substepsPerTick; i++)
                 {
-                    // Face goal
-                    //var degree = Vector3.Angle(transform.forward, dirToGoal);
-                    //if (degree > 100f && tripTime > 1f)
-                    //{
-                    //    Debug.Log($"{transform.forward}, {transform.rotation}, {dirToGoal}, {targetRotation}");
-                    //    Debug.LogError($"Car ID: {id}, {degree} degree turn");
-                    //    Debug.Break();
-                    //}
-                    //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
-                    //    rotSpeed * Time.deltaTime / substepsPerTick);
                     transform.rotation = targetRotation;
                     
                     if (route.Count == 0) return;
-
-                    // if (route[0].z != currentRoadId)
-                    // {
-                    //     transform.rotation = targetRotation;
-                    // } else {
-                    //     var road = roadManager.roads[currentRoadId];
-                    //     var roadDir = (road.RealEndPos - road.RealStartPos).normalized;
-                    //     var roadRotation = Quaternion.LookRotation(roadDir);
-                    //     transform.rotation = roadRotation;
-                    // }
                     
-                    
-
                     if (currentSpeed < speed) {
                         currentSpeed += accelerationMPSS * Time.deltaTime;
                         if (currentSpeed > speed) {
@@ -280,18 +258,13 @@ namespace WebSocketTraffic
                 if (blockedByIntersection)
                     // Stopped
                     trafficLights.State = TrafficLights.LightState.RED;
-                // Gizmos.color = Color.red;
-                // Gizmos.DrawSphere(transform.position + 2 * Vector3.up, 0.5f);
+
                 else if (currentIntersection.inYellowPhase)
                     // Yellow light moving
                     trafficLights.State = TrafficLights.LightState.YELLOW;
-                // Gizmos.color = Color.yellow;
-                // Gizmos.DrawSphere(transform.position + 2 * Vector3.up, 0.5f);
                 else
                     // Green light moving
                     trafficLights.State = TrafficLights.LightState.GREEN;
-                // Gizmos.color = Color.green;
-                // Gizmos.DrawSphere(transform.position + 2 * Vector3.up, 0.5f);
             }
             else
             {
@@ -471,20 +444,6 @@ namespace WebSocketTraffic
         {
             // Note: Destination could be at the start of a road which could be occupied
             if (route.Count == 0) return false;
-
-            //// Encountered road with zero length (double intersection)
-            //if (currentRoadId != -1)
-            //    if (roadManager.roads[currentRoadId].IsPointRoad)
-            //        return Physics.CheckBox(new Vector3(route[2].x, 0, route[2].y) + Vector3.up, new Vector3(3, .5f, 3), // doesn't work because dupes have been elimiinated
-            //            Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
-
-            //if (useAutoFlow)
-            //    // Use a tighter detection box
-            //    return Physics.CheckBox(new Vector3(route[1].x, 0, route[1].y) + Vector3.up, new Vector3(1, .5f, 1),
-            //        Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
-
-            //return Physics.CheckBox(new Vector3(route[1].x, 0, route[1].y) + Vector3.up, new Vector3(3, .5f, 3),
-            //    Quaternion.identity, carMask, QueryTriggerInteraction.Ignore);
 
             // Use the same check for everything to maximise consistency
             if (route.Count == 1 || Vector3.Distance(transform.position, new Vector3(prevGoal.x, 0, prevGoal.y)) < tolerance)

@@ -24,6 +24,7 @@ namespace WebSocketTraffic
         public bool useAutoFlow;
         public (int, int) id;
 
+        // Start is called before the first frame update
         private void Start()
         {
             if (!isLightControlledIntersection) return;
@@ -31,6 +32,7 @@ namespace WebSocketTraffic
             InvokeRepeating(nameof(UpdateWaitingVehicles), 0, 0.2f);
         }
 
+        // draws the route
         private void OnDrawGizmosSelected()
         {
             var rm = GetComponentInParent<RoadManager>();
@@ -42,6 +44,7 @@ namespace WebSocketTraffic
             }
         }
 
+        // manage vehicle entering intersection
         private void OnTriggerEnter(Collider other)
         {
             if (!isLightControlledIntersection) return;
@@ -96,6 +99,7 @@ namespace WebSocketTraffic
             StartCoroutine(ShortBypassCollisions(v));
         }
 
+        // manage vehicle exiting intersection
         private void OnTriggerExit(Collider other)
         {
             if (!isLightControlledIntersection) return;
@@ -104,7 +108,8 @@ namespace WebSocketTraffic
             if (v.currentIntersection == this) v.currentIntersection = null;
             v.bypassCollisions = false;
         }
-
+        
+        // method (optional) to bypass collisions
         public IEnumerator ShortBypassCollisions(Vehicle v)
         {
             v.bypassCollisions = true;
@@ -112,6 +117,7 @@ namespace WebSocketTraffic
             v.bypassCollisions = false;
         }
 
+        // method to handle intersection message
         public void HandleInitMessage(IntersectionMessage msg)
         {
             id = ((int)msg.id.x, (int)msg.id.y);
@@ -131,12 +137,14 @@ namespace WebSocketTraffic
             currentAllowedId = pattern[patternIndex];
         }
 
+        // update waiting vehicles one by one
         public void UpdateWaitingVehicles()
         {
             List<Vehicle> tempCopy = new(queuingVehicles);
             foreach (var v in tempCopy) UpdateWaitingVehicle(v);
         }
 
+        // update each vehicle
         public void UpdateWaitingVehicle(Vehicle vehicle)
         {
             var canEnter = false;
@@ -158,10 +166,7 @@ namespace WebSocketTraffic
                 canEnter = (int)vehicle.prevGoal.z == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
                             !manager.roadManager.IsRoadFull((int)vehicle.route[0].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount, vehicle.passengerCount >= 20) &&
                             !inYellowPhase;
-                //if (canEnter)
-                //    vehicle.currentRoadId = (int)vehicle.route[0].z; // Adding car to the next road as soon as it leaves its previous road
-            } else
-            {
+            } else {
                 vehicle.nextRoadLength = manager.roadManager.roads[(int)vehicle.route[1].z].Length;
                 vehicle.nextRoadCarCount = manager.roadManager.vehicleManager.vehicles.Values.Count(v => v.currentRoadId == (int)vehicle.route[1].z && v.running && v.passengerCount < 20);
                 vehicle.nextRoadBusCount = manager.roadManager.vehicleManager.vehicles.Values.Count(v => v.currentRoadId == (int)vehicle.route[1].z && v.running && v.passengerCount >= 20);
@@ -172,32 +177,9 @@ namespace WebSocketTraffic
                 canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
                             !manager.roadManager.IsRoadFull((int)vehicle.route[1].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount, vehicle.passengerCount >= 20) &&
                             !inYellowPhase;
-                //if (canEnter)
-                //    vehicle.currentRoadId = (int)vehicle.route[1].z; // Adding car to the next road as soon as it leaves its previous road
+                
             }
 
-            //if (manager.roadManager.roads[vehicle.currentRoadId].IsPointRoad)
-            //{
-            //    if (vehicle.route.Count <= 1)
-            //    {
-            //        canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied();
-            //    }
-            //    else
-            //    {
-            //        canEnter = vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
-            //                   !manager.roadManager.IsRoadFull(vehicle.NextRoadId);
-            //    }
-            //}
-            //else
-            //{
-            //    canEnter = (vehicle.currentRoadId == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
-            //                !manager.roadManager.IsRoadFull(vehicle.NextRoadId)) ||
-            //               !enterRoadIds.Contains(vehicle.currentRoadId);
-            //}
-
-            // canEnter = (vehicle.currentRoadId == currentAllowedId &&
-            //                 !vehicle.IsNextGoalOccupied()) ||
-            //                !enterRoadIds.Contains(vehicle.currentRoadId);
             vehicle.blockedByIntersection = !canEnter;
 
             if (canEnter)
@@ -210,12 +192,6 @@ namespace WebSocketTraffic
         {
             while (true)
             {
-                // // Wait with green
-                // //if (useAutoFlow && queuingVehicles.All(v => v.currentRoadId != currentAllowedId))
-                // //     If no cars in this direction, skip its green light
-                // //    yield return new WaitForSeconds(0.6f);
-                // //else
-                // //    yield return new WaitForSeconds(greenDuration);
 
                 // // Wait for traffic light
                 yield return new WaitForSeconds(greenDuration);
