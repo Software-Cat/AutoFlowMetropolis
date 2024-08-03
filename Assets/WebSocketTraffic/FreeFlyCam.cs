@@ -9,12 +9,12 @@ namespace WebSocketTraffic
 
         [Header("Constants")]
 
-        //unity controls and constants input
+        // unity controls and constants input
         public float AccelerationMod;
 
-        public float XAxisSensitivity;
+        public float XAxisSensitivity; // mouse sensitivity
         public float YAxisSensitivity;
-        public float DecelerationMod;
+        public float DecelerationMod; // deceleration rate
 
         [Space] [Range(0, 89)] public float MaxXAngle = 60f;
 
@@ -22,6 +22,7 @@ namespace WebSocketTraffic
 
         [Header("Controls")] public KeyCode Forwards = KeyCode.W;
 
+        // initialising the controls for camera movement
         public KeyCode Backwards = KeyCode.S;
         public KeyCode Left = KeyCode.A;
         public KeyCode Right = KeyCode.D;
@@ -42,8 +43,10 @@ namespace WebSocketTraffic
         // Update is called once per frame
         private void Update()
         {
+            // switch between camera modes with the spacebar
             if (Input.GetKeyDown(KeyCode.Space)) freeFlyVirtualCam.enabled = !freeFlyVirtualCam.enabled;
 
+            // if the free fly camera is enabled, move the camera
             if (freeFlyVirtualCam.enabled)
             {
                 HandleMouseRotation();
@@ -102,7 +105,7 @@ namespace WebSocketTraffic
 
         private void HandleDeceleration(Vector3 acceleration)
         {
-            // deceleration functionality
+            // deceleration functionality based on the predefined parameter
             if (Mathf.Approximately(Mathf.Abs(acceleration.x), 0))
             {
                 if (Mathf.Abs(_moveSpeed.x) < DecelerationMod)

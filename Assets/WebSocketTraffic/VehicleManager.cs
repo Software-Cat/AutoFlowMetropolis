@@ -12,7 +12,8 @@ namespace WebSocketTraffic
         public bool isUpdating = false;
 
         private void Update()
-        {
+        {   
+            // If there is a pending update message, process it
             if (pendingUpdateMessage != null && canProcessPendingMessage && pendingUpdateMessage.updates != null && pendingUpdateMessage.updates.Count != 0)
             {
                 foreach (var update in pendingUpdateMessage.updates)

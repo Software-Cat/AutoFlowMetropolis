@@ -24,6 +24,7 @@ namespace WebSocketTraffic
 
         private LightState _state = LightState.RED;
 
+        // visually depicting the various traffic light states by enabling/disabling the lights and changing their materials
         public LightState State
         {
             get => _state;

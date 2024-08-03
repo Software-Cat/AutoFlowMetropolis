@@ -7,15 +7,14 @@ namespace WebSocketTraffic
 {
     public class InitialSpawner : MonoBehaviour
     {
-        public List<DummyTileKey> dummySerializedTileKeys;
-        public float scaleFactor = 20f;
+        public List<DummyTileKey> dummySerializedTileKeys; // serialized tile keys
+        public float scaleFactor = 20f; // scale factor for the terrain (how big is it displayed?)
         public GameObject vehiclePrefab;
 
         public GameObject busPrefab;
         public InitMessage initMsg;
 
         public int numOfRows;
-
         public int itemsPerRow;
         public VehicleManager vehicleManager;
         public IntersectionManager intersectionManager;
@@ -25,7 +24,8 @@ namespace WebSocketTraffic
         public Dictionary<string, GameObject> tileKeys;
 
         private void Awake()
-        {
+        {   
+            // get the serialized tile keys, and instantiate the landscape's vehicleManager and roadManager
             tileKeys = dummySerializedTileKeys.ToDictionary(
                 c => c.name,
                 c => c.obj);
@@ -34,7 +34,8 @@ namespace WebSocketTraffic
         }
 
         public void Update()
-        {
+        {   
+            // if it's time to spawn, generate the terrain, roads, intersections, and cars
             if (timeToSpawn)
             {
                 GenerateTerrain();
@@ -49,12 +50,13 @@ namespace WebSocketTraffic
         {
             for (var row = 0; row < numOfRows; row++)
             for (var col = 0; col < itemsPerRow; col++)
-            {
+            {   
+                // generate each individual tile at the correct position
                 var tileDef = tileGrid[row, col];
                 var tile = Instantiate(tileKeys[tileDef], new Vector3(col + .5f, 0, row + .5f) * scaleFactor,
                     Quaternion.identity, transform);
 
-                // Intersection
+                // spawn an intersection if the tile is an intersection
                 var inter = tile.GetComponent<Intersection>();
                 if (inter != null)
                 {
@@ -68,6 +70,7 @@ namespace WebSocketTraffic
         {
             foreach (var vehicleMsg in initMsg.vehicles)
             {   
+                // spawn a bus if the vehicle has more than 20 passengers
                 GameObject currentCar;
                 if (vehicleMsg.passengerCount >= 20) {
                     currentCar = Instantiate(busPrefab, vehicleMsg.Position, Quaternion.Euler(0, vehicleMsg.rotation, 0), transform);
@@ -75,6 +78,7 @@ namespace WebSocketTraffic
                     currentCar = Instantiate(vehiclePrefab, vehicleMsg.Position, Quaternion.Euler(0, vehicleMsg.rotation, 0), transform);
                 }
                 
+                // initialise the vehicle's properties
                 var vehicleComp = currentCar.GetComponent<Vehicle>();
                 vehicleComp.HandleInitMessage(vehicleMsg);
                 vehicleComp.roadManager = roadManager;
@@ -97,6 +101,7 @@ namespace WebSocketTraffic
 
         public void HandleInitMessage(InitMessage msg)
         {
+            // initialise the terrain grid once the initialisation message is received from the backend
             initMsg = msg;
             itemsPerRow = initMsg.rowWidth;
             numOfRows = initMsg.tiles.Count / itemsPerRow;

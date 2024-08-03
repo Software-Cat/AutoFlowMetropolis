@@ -8,7 +8,8 @@ namespace WebSocketTraffic
     {
         public List<string> tiles;
         public int rowWidth;
-        public List<VehicleInitMessage> vehicles;
+
+        public List<VehicleInitMessage> vehicles; 
         public List<RoadInitMessage> roads;
         public List<IntersectionMessage> intersections;
     }

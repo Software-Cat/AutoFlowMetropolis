@@ -12,13 +12,13 @@ namespace WebSocketTraffic
 
         public Camera minimapCamera;
         public VehicleManager vehicleManager;
-        public bool hasPicked;
-        public bool hasRoute;
+        public bool hasPicked; // whether the player has picked a car to follow
+        public bool hasRoute; // does this car have a route?
         public Vehicle target;
         public TextMeshProUGUI directionText;
         public float timeSinceLastTurn;
-        public TextMeshProUGUI endTimeText;
-        public TextMeshProUGUI timeLeftText;
+        public TextMeshProUGUI endTimeText; // time when its route is estimated to end
+        public TextMeshProUGUI timeLeftText; // time left to reach destination
         public ProgressBar progressBar;
         public int totalNodes;
         public TextMeshProUGUI algoText;
@@ -40,6 +40,8 @@ namespace WebSocketTraffic
             // Initialize
             if (!hasPicked && vehicleManager.vehicles.Count != 0)
             {
+
+                // Pick a random vehicle to follow & show its path
                 target = vehicleManager.vehicles[Random.Range(0, vehicleManager.vehicles.Count)];
                 var tr = target.transform;
                 followCarCam.Follow = tr;
@@ -52,6 +54,7 @@ namespace WebSocketTraffic
                 hasPicked = true;
             }
 
+            // if a vehicle is picked and has a route, initialise the estimated end time as 9:00 (placeholder that is changed later in the code)
             if (hasPicked && !hasRoute && target.route.Count > 0)
             {
                 totalNodes = target.route.Count;
@@ -72,13 +75,20 @@ namespace WebSocketTraffic
                 {
                     var angle = Vector3.SignedAngle(trans.forward, target.goal - trans.position, Vector3.up);
                     var nextGoal = new Vector3(target.route[1].x, 0, target.route[1].z);
-                    if (angle > 5f) {
+
+                    // detects which direction the car is turning in based on the angle between the car's forward vector and the vector pointing to the next goal
+                    if (angle > 5f)
+                    {
                         directionText.text = "Turn Right";
                         timeSinceLastTurn = 0f;
-                    } else if (angle < -5f) {
+                    }
+                    else if (angle < -5f)
+                    {
                         directionText.text = "Turn Left";
                         timeSinceLastTurn = 0f;
-                    } else {
+                    }
+                    else
+                    {
                         timeSinceLastTurn += Time.deltaTime;
                     }
 

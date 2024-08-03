@@ -17,6 +17,7 @@ namespace WebSocketTraffic
 
         private void Start()
         {
+            // randomise the filler landplots (e.g. buildings)
             var choice = prefabs[Random.Range(0, prefabs.Count)];
             var obj = Instantiate(choice.prefab, transform);
             transform.localScale = choice.scale;

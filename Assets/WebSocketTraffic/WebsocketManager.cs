@@ -38,6 +38,7 @@ namespace WebSocketTraffic {
             graphics = PlayerPrefs.GetInt("graphics", 0) == 1;
             roadBlockage = PlayerPrefs.GetInt("roadBlockage", 0) == 1;
 
+            // send these prefs to the backend
             string generateMsg = "{" +
                 "'vehicleDensity':" + vehicleDensity + "," +
                 "'autoFlowPercent':" + autoFlowPercent + "," +
@@ -50,8 +51,8 @@ namespace WebSocketTraffic {
             ws.Send(generateMsg);
             Debug.Log("Sent message: " + generateMsg);
 
-            // Send information every n seconds
-            InvokeRepeating("SendInfo", 10.0f, updateInterval);
+            // Send information every 10 seconds
+            InvokeRepeating("SendInfo", 10f, updateInterval);
         }
 
         void OnEnable() {
@@ -61,7 +62,8 @@ namespace WebSocketTraffic {
         
 
         private void SendInfo()
-        {
+        {   
+            // transmit vehicle data to the backend
             var vehicles = vehicleManager.vehicles;
             string updatemsg = "{";
 
@@ -75,7 +77,6 @@ namespace WebSocketTraffic {
                     updatemsg += "(" + routenode.x + "," + routenode.y + "," + routenode.z + "),";
                 }
                 updatemsg += "]},";
-                //Debug.Log(infor[0] + " " + infor[1]);
             }
 
             updatemsg += "}";
@@ -95,13 +96,16 @@ namespace WebSocketTraffic {
         }
 
         private void HandleMessage(string jsonMsg)
-        {
+        {   
+            // if the websocket has initialized, handle update messages
             if (websocketHasInitialized) {
                 var updateMsg = JsonUtility.FromJson<UpdateMessage>(jsonMsg);
                 if (amUpdating) vehicleManager.isUpdating = true;
                 vehicleManager.HandleUpdateMessage(updateMsg);
                 amUpdating = true;
                 Debug.Log("update");
+            
+            // if the websocket has not initialized, handle the init message instead
             } else {
                 var initMsg = JsonUtility.FromJson<InitMessage>(jsonMsg);
                 updateInterval = (float)initMsg.vehicles[0].id;

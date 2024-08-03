@@ -312,6 +312,7 @@ namespace WebSocketTraffic
 
             Vector3 nextNode;
 
+            // check if it's reached its destination, and if it's been idle for more than 10s, it can despawn
             if (route.Count == 0) {
                 deadTime += Time.deltaTime;
                 if (deadTime >= 10f) {
@@ -344,19 +345,22 @@ namespace WebSocketTraffic
         }
 
         public bool ReachedGoal()
-        {
+        {   
+            // if it's very close to the goal, just set it to the goal
             if (Vector3.Distance(transform.position, goal) < tolerance)
             {
                 transform.position = goal;
                 return true;
             }
 
+            // if it's at the goal and the goal is the only point in the route, set it to the goal
             if (route.Count == 1 && Vector3.Distance(transform.position, goal) < destTolerance)
             {
                 transform.position = goal;
                 return true;
             }
 
+            // if the car is closer to its nextgoal than its current goal and next goal, something went wrong before and it has clearly reached the goal
             if (route.Count > 1)
             {
                 var nextGoal = new Vector3(route[1].x, 0, route[1].y);
@@ -365,7 +369,8 @@ namespace WebSocketTraffic
                     return true;
                 }
             }
-
+            
+            // debugging test to check if the car is in between the previous goal and the current goal
             if (visited.Count >= 1) {
                 var len = visited.Count - 1;
                 var prev = new Vector3(visited[len].x, 0, visited[len].y);
@@ -393,7 +398,8 @@ namespace WebSocketTraffic
         }
 
         public void HandleUpdateMessage(VehicleUpdateMessage msg)
-        {
+        {   
+            // if the car has no route, set the goal to its current position
             route = msg.route;
             if (route.Count == 0)
             {
@@ -403,15 +409,12 @@ namespace WebSocketTraffic
             {   
                 goal = new Vector3(msg.route[0].x, 0, msg.route[0].y);
                 speed = roadManager.roads[(int)msg.route[0].z].speedLimit;
-                //currentRoadId = (int)route[0].z;
                 transform.LookAt(goal);
-                //nextRoadLength = roadManager.roads[(int)msg.route[0].z].Length;
             }
-
-            //running = true;
         }
 
         public void handleConstantUpdate(VehicleUpdateMessage msg) {     
+            // update routes based on route recalculation, but delete already visited nodes to make sure routes aren't bugged
             if (route.Count > 1)
             {   
                 while ((msg.route.Count > 1) && visited.Contains(msg.route[0])) msg.route.RemoveAt(0);

@@ -8,6 +8,7 @@ namespace WebSocketTraffic
         public RoadManager roadManager;
         public Dictionary<(int, int), Intersection> intersections = new();
 
+        // update each intersection one by one once the init message is received
         public void HandleInitMessage(InitMessage msg)
         {
             foreach (var currentMsg in msg.intersections)

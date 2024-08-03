@@ -20,20 +20,9 @@ namespace WebSocketTraffic {
         public bool graphics = false;
         public bool roadBlockage = false;
 
-        // Start is called before the first frame update
-        void Start()
-        {
-            // Initialize your menu options here if needed
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            // Handle any updates here
-        }
-
         void OnDisable()
-        {
+        {   
+            // save the values to playerprefs so it can be accessed in the next scene
             PlayerPrefs.SetFloat("vehicleDensity", vehicleDensity);
             PlayerPrefs.SetFloat("autoFlowPercent", autoFlowPercent);
             PlayerPrefs.SetFloat("mapSize", mapSize);
@@ -44,6 +33,7 @@ namespace WebSocketTraffic {
             PlayerPrefs.SetInt("roadBlockage", roadBlockage ? 1 : 0);
         }
 
+        // helper method to create a texture with a border (not supported natively)
         Texture2D CreateTextureWithBorder(float w, float h, Color borderColor, int borderThickness)
         {
             int width = (int)w;
@@ -75,18 +65,20 @@ namespace WebSocketTraffic {
             gridStyle.fontSize = 30;
             gridStyle.font = font;
             gridStyle.alignment = TextAnchor.MiddleLeft;
-            // Set the text color with transparency (RGBA)
-            gridStyle.normal.textColor = new Color(0f, 0f, 0f, 1f); // White with 50% transparency
+            
+            // set the text color with transparency (RGBA)
+            gridStyle.normal.textColor = new Color(0f, 0f, 0f, 1f); // white with 50% transparency
             // #296EDF
             gridStyle.hover.textColor = new Color(0.16f, 0.43f, 0.87f, 1f); 
             gridStyle.active.textColor = new Color(0.16f, 0.43f, 0.87f, 1f);
             gridStyle.padding = new RectOffset(40, 10, 10, 10);
 
-            // Create a texture and set it as the background for the button to change its color
+            // create a texture and set it as the background for the button to change its color
             Texture2D buttonTexture = new Texture2D(1, 1);
             buttonTexture.SetPixel(0, 0, new Color(0.945f, 0.945f, 0.945f, 1f));
             buttonTexture.Apply();
 
+            // keep aspect ratio constant, so we can scale the UI elements based on the screen size
             float horScale = Screen.width / 1920f;
             float verScale = Screen.height / 1080f;
 
@@ -94,6 +86,7 @@ namespace WebSocketTraffic {
             gridStyle.hover.background = buttonTexture; 
             gridStyle.active.background = buttonTexture; 
 
+            // prepare the dimensions for the buttons
             float optionWidth = 565 * horScale;
             float optionHeight = 100 * verScale;
             float spaceBetweenOptions = 15 * verScale;
@@ -103,16 +96,16 @@ namespace WebSocketTraffic {
                 float buttonY = 250 * verScale + i * (optionHeight + spaceBetweenOptions);
                 Rect buttonRect = new Rect(270 * horScale, buttonY, optionWidth, optionHeight);
 
-                // Check if the current button is selected
+                // check if the current button is selected
                 if (selectedIndex == i)
                 {
-                    // Create a texture with a border for the selected button
-                    Texture2D selectedTexture = CreateTextureWithBorder(optionWidth, optionHeight, new Color(0.16f, 0.43f, 0.87f, 1f), 4); // Example with a red border
+                    // create a texture with a border for the selected button
+                    Texture2D selectedTexture = CreateTextureWithBorder(optionWidth, optionHeight, new Color(0.16f, 0.43f, 0.87f, 1f), 4);
                     gridStyle.normal.background = selectedTexture;
                 }
                 else
                 {
-                    // Apply the original texture without border for unselected buttons
+                    // apply the original texture without border for unselected buttons
                     gridStyle.normal.background = buttonTexture;
                 }
 
@@ -123,30 +116,30 @@ namespace WebSocketTraffic {
                 }
             }
 
-            // Example starting value
-            float sliderMinValue = 0f; // Minimum value of the slider
-            float sliderMaxValue = 100f; // Maximum value of the slider
+            // example starting value
+            float sliderMinValue = 0f;
+            float sliderMaxValue = 100f;
 
-            // Create the Rect for the slider
+            // create the Rect for the slider
             
             Rect sliderRect = new Rect(1100*horScale, 300*verScale, 400*horScale, 20*verScale); 
 
-            // Before drawing the slider, set the colors
+            // before drawing the slider, set the colors
             Color sliderBackgroundColor = new Color(0.93f, 0.93f, 0.93f, 1f);
             Color sliderThumbColor = new Color(0.16f, 0.43f, 0.87f, 1f); 
 
-            // Apply new color to the slider background
+            // apply new color to the slider background
             GUI.skin.horizontalSlider.normal.background = CreateTextureWithColor(1, 1, sliderBackgroundColor);
 
-            // Apply new color to the slider thumb
+            // apply new color to the slider thumb
             GUI.skin.horizontalSliderThumb.normal.background = CreateTextureWithColor(1, 1, sliderThumbColor);
             GUI.skin.horizontalSliderThumb.hover.background = CreateTextureWithColor(1, 1, sliderThumbColor);
             GUI.skin.horizontalSliderThumb.active.background = CreateTextureWithColor(1, 1, sliderThumbColor);
 
-            // Draw the slider and update vehicleDensity with the current value of the slider
+            // draw the slider and update vehicleDensity with the current value of the slider
             vehicleDensity = GUI.HorizontalSlider(sliderRect, vehicleDensity, sliderMinValue, sliderMaxValue);
 
-            // Display the current value of the slider
+            // display the current value of the slider
             GUIStyle labelStyle1 = new GUIStyle(GUI.skin.label);
             labelStyle1.font = font;
             labelStyle1.fontSize = 15;
@@ -154,7 +147,7 @@ namespace WebSocketTraffic {
             labelStyle1.hover.textColor = new Color(0f, 0f, 0f, 1f); 
             GUI.Label(new Rect(1550*horScale, 290*verScale, 100*horScale, 40*verScale), vehicleDensity.ToString("F0") + "%", labelStyle1);
 
-
+            // create the next sliders manually
             Rect sliderRect2 = new Rect(1100*horScale, 400*verScale, 400*horScale, 20*verScale);
             autoFlowPercent = GUI.HorizontalSlider(sliderRect2, autoFlowPercent, sliderMinValue, sliderMaxValue);
             GUI.Label(new Rect(1550*horScale, 390*verScale, 100*horScale, 40*verScale), autoFlowPercent.ToString("F0") + "%", labelStyle1);
@@ -163,7 +156,7 @@ namespace WebSocketTraffic {
             mapSize = GUI.HorizontalSlider(sliderRect3, mapSize, sliderMinValue, sliderMaxValue);
             GUI.Label(new Rect(1550*horScale, 480*verScale, 100*horScale, 40*verScale), mapSize.ToString("F0") + "%", labelStyle1);
 
-            // toggle
+            // create all the toggle buttons
             GUIStyle toggleStyle = new GUIStyle(GUI.skin.toggle);
             toggleStyle.font = font;
             toggleStyle.fontSize = 20;
@@ -180,7 +173,7 @@ namespace WebSocketTraffic {
             Rect toggleRect4 = new Rect(1260*horScale, 680*verScale, 60*horScale, 60*verScale);
             roadBlockage = GUI.Toggle(toggleRect4, roadBlockage, "", toggleStyle);
 
-            // button
+            // buttons
             GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
             Rect buttonRect2 = new Rect(1370*horScale, 800*verScale, 270*horScale, 200*verScale);
             Texture2D buttonTexture2 = new Texture2D(1, 1);
@@ -189,11 +182,14 @@ namespace WebSocketTraffic {
             buttonStyle.normal.background = buttonTexture2;
             buttonStyle.hover.background = buttonTexture2;
             buttonStyle.active.background = buttonTexture2;
+
+            // next button switches the scene to the simulation
             if (GUI.Button(buttonRect2, "", buttonStyle))
             {
                 SceneManager.LoadScene("WebCity");
             }
 
+            // back button switches the scene to the landing page
             Rect buttonRect3 = new Rect(1050*horScale, 800*verScale, 270*horScale, 200*verScale);
             if (GUI.Button(buttonRect3, "", buttonStyle))
             {

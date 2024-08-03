@@ -19,7 +19,11 @@ namespace WebSocketTraffic
         private void Update()
         {
             //var cumulEm = vehicleManager.vehicles.Values.Sum(vehicle => (vehicle.cumulativeEmission + ((vehicle.cumulativeEmission / (vehicle.tripTime - vehicle.idleTime) * vehicle.idleTime * 2))));
+            
             var cumulEm = 0f;
+            
+            // calculate the cumulative emissions, trip time, and idle time for all vehicles
+            // uses the assumption that idle time is twice as polluting as trip time (backed by empirical data)
             for (var i = 0; i < vehicleManager.vehicles.Count; i++) {
                 var vehicle = vehicleManager.vehicles[i];
                 var trip = vehicle.tripTime;

@@ -10,8 +10,8 @@ namespace WebSocketTraffic
     /// </summary>
     public class Intersection : MonoBehaviour
     {
-        public List<int> enterRoadIds;
-        public List<int> exitRoadIds;
+        public List<int> enterRoadIds; // all roads entering the intersection
+        public List<int> exitRoadIds; // all roads exiting the intersection
         public List<Vehicle> queuingVehicles = new();
         public float yellowDuration = 1f; // Edit in prefab inspector
         public float greenDuration = 3f; // Between 3 and 8 seconds
@@ -19,7 +19,7 @@ namespace WebSocketTraffic
         public int currentAllowedId = -1;
         public List<int> pattern;
         public int patternIndex;
-        public bool isLightControlledIntersection = true;
+        public bool isLightControlledIntersection = true; // some roads might not have traffic lights, such as those connecting only 2 roads
         public IntersectionManager manager;
         public bool useAutoFlow;
         public (int, int) id;
@@ -117,7 +117,7 @@ namespace WebSocketTraffic
             v.bypassCollisions = false;
         }
 
-        // method to handle intersection message
+        // method to handle intersection message and spawn the current intersection
         public void HandleInitMessage(IntersectionMessage msg)
         {
             id = ((int)msg.id.x, (int)msg.id.y);
@@ -162,6 +162,7 @@ namespace WebSocketTraffic
                 vehicle.nextRoadFull = manager.roadManager.IsRoadFull((int)vehicle.route[0].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount, vehicle.passengerCount >= 20);
                 vehicle.nextGoalOccupied = vehicle.IsNextGoalOccupied();
                 vehicle.allowedRoad = (int)vehicle.prevGoal.z == currentAllowedId;
+                
                 // Vehicle has clipped into goal despite being stopped after triggering intersection's hitbox
                 canEnter = (int)vehicle.prevGoal.z == currentAllowedId && !vehicle.IsNextGoalOccupied() &&
                             !manager.roadManager.IsRoadFull((int)vehicle.route[0].z, vehicle.nextRoadCarCount, vehicle.nextRoadBusCount, vehicle.passengerCount >= 20) &&

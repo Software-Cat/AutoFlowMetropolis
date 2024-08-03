@@ -11,6 +11,8 @@ namespace WebSocketTraffic
 
         private void OnDrawGizmos()
         {
+
+            // draws a red wire cube at the start of each road for debugging visibility
             foreach (var (id, road) in roads)
             {
                 Gizmos.color = Color.red;
@@ -20,13 +22,16 @@ namespace WebSocketTraffic
 
         public void HandleInitMessage(InitMessage msg)
         {
+            // initialise roads
             foreach (var road in msg.roads) {
                 roads[road.id] = road;
             }
         }
 
         public bool IsRoadFull(int roadId, int carCount, int busCount, bool isBus)
-        {
+        {   
+
+            // check if road is full based on vehicle lengths
             var len = roads[roadId].Length;
 
             // Penalties
