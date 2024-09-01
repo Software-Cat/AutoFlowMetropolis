@@ -82,8 +82,8 @@ namespace Concurrent
             currentSpeed = 0f;
             speed = 25f;
             visited = new();
-            tolerance = 0.2f; // modify this in prefab inspector
-            destTolerance = 0.2f;
+            tolerance = 0.5f; // modify this in prefab inspector
+            destTolerance = 0.5f;
             rg = GameObject.Find("RoadGenerator").GetComponent<RoadGenerator>();
         }
 

@@ -188,8 +188,7 @@ namespace WebSocketTraffic {
             // next button switches the scene to the simulation
             if (GUI.Button(buttonRect2, "", buttonStyle))
             {   
-                Debug.Log("Selected Index: " + selectedIndex);
-                if (selectedIndex == -1)
+                if (graphics)
                 {
                     SceneManager.LoadScene("WebCity");
                 } else {
