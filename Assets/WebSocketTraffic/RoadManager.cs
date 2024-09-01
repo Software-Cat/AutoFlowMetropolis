@@ -37,6 +37,7 @@ namespace WebSocketTraffic
             // Penalties
             if (roads[roadId].IsPointRoad)
                 // Zero length road (double intersection)
+                
                 return carCount != 0;
             var spaceUsed = carCount * 5 + busCount * 10;
 

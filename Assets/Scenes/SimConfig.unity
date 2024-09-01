@@ -650,7 +650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef045bdce612ec4d85d511e95b01d27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIndex: 0
+  selectedIndex: -1
   font: {fileID: 12800000, guid: 720c7c613ec378d4eae1d5b53a1e6d00, type: 3}
   vehicleDensity: 0
   autoFlowPercent: 0
@@ -659,6 +659,7 @@ MonoBehaviour:
   receiveNewDests: 0
   graphics: 0
   roadBlockage: 0
+  useRealLandscape: 0
 --- !u!1 &2033566136
 GameObject:
   m_ObjectHideFlags: 0

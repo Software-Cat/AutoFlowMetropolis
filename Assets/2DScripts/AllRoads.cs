@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WebSocketTraffic
+namespace Concurrent
 {
     [Serializable]
     public class AllRoads
     {   
       
         public List<RoadInitMsg> roads;
-        public List<Vector3> intersections;
+        public List<VehicleInitMsg> vehicles;
     }
 }

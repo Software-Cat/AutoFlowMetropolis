@@ -320,8 +320,19 @@ MonoBehaviour:
   oneLane: {fileID: 2552338697666234345, guid: 4362be3c95e8841ac9b10650ef0ee92a, type: 3}
   twoLane: {fileID: 9136792036263464524, guid: f537dcb9546ec4013bf8c6946e3076b2, type: 3}
   threeLane: {fileID: 6789852517392524805, guid: 19aed492ddb374ea381f62e6ef07e764, type: 3}
+  bus: {fileID: 7861069560427300044, guid: 0550abab608a847378124d9a2d313c17, type: 3}
+  conventionalCar: {fileID: 4172193428292661175, guid: 87abfa28f63e541f3b46f7a89c9c0ec0, type: 3}
+  electricCar: {fileID: 6486449805931128781, guid: 96e849f1549d5467d87621db569488af, type: 3}
   intersection: {fileID: 7963372693830863386, guid: 2aeae00d1ec0d4a648cea7ab57edf03a, type: 3}
   bgPrefab: {fileID: 1525681684321653448, guid: 5ab64399e590a4bf1996a42f8032f48d, type: 3}
+  vehicleDensity: 0
+  autoFlowPercent: 0
+  mapSize: 0
+  selectedIndex: 0
+  fullDay: 0
+  receiveNewDests: 0
+  graphics: 0
+  roadBlockage: 0
 --- !u!1 &1442263823
 GameObject:
   m_ObjectHideFlags: 0

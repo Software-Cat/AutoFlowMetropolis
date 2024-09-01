@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace WebSocketTraffic {
     public class SimConfig : MonoBehaviour {
         private string[] options = new string[] {"Sydney", "Melbourne", "Manhattan", "Los Angeles", "London", "Tokyo"};
-        public int selectedIndex = 0;
+        public int selectedIndex = -1;
         public Font font;
 
         public float vehicleDensity = 0f;
@@ -19,6 +19,8 @@ namespace WebSocketTraffic {
         public bool receiveNewDests = false;
         public bool graphics = false;
         public bool roadBlockage = false;
+
+        public bool useRealLandscape = false;
 
         void OnDisable()
         {   
@@ -185,8 +187,15 @@ namespace WebSocketTraffic {
 
             // next button switches the scene to the simulation
             if (GUI.Button(buttonRect2, "", buttonStyle))
-            {
-                SceneManager.LoadScene("WebCity");
+            {   
+                Debug.Log("Selected Index: " + selectedIndex);
+                if (selectedIndex == -1)
+                {
+                    SceneManager.LoadScene("WebCity");
+                } else {
+                    SceneManager.LoadScene("2D");
+                }
+                
             }
 
             // back button switches the scene to the landing page

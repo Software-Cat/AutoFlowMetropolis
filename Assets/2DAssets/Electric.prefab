@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2062967544562730704}
   - component: {fileID: 4995089393011100542}
-  m_Layer: 0
+  - component: {fileID: 1074146741811286221}
+  m_Layer: 4
   m_Name: Electric
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,3 +85,53 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1074146741811286221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6486449805931128781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9edbc29d6602920408d3f91a958a0fcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  position: {fileID: 0}
+  spawn: {fileID: 0}
+  type: 0
+  nextRoadLength: 0
+  nextRoadCarCount: 0
+  nextRoadBusCount: 0
+  nextRoadFull: 0
+  nextGoalOccupied: 0
+  allowedRoad: 0
+  hasBeenQueued: 0
+  currentRoadId: -1
+  deadTime: 0
+  speed: 5
+  route: []
+  rotSpeed: 10
+  tolerance: 1.5
+  destTolerance: 5
+  raycastPoints: []
+  inFrontThreshold: 1
+  boxCollider: {fileID: 0}
+  rb: {fileID: 0}
+  emissionRate: 0
+  cumulativeEmission: 0
+  tripTime: 0
+  useAutoFlow: 0
+  idleTime: 0
+  blockedByIntersection: 0
+  bypassCollisions: 0
+  currentSessionIdleTime: 0
+  passengerCount: 0
+  lineRenderer: {fileID: 0}
+  drawPathLine: 0
+  substepsPerTick: 3
+  accelerationMPSS: 0
+  currentSpeed: 0
+  visited: []
+  prevGoal: {fileID: 0}

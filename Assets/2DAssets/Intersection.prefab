@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1560685056539245323}
   - component: {fileID: 3680469877028519672}
-  m_Layer: 0
+  - component: {fileID: -977606011118246973}
+  m_Layer: 1
   m_Name: Intersection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,3 +85,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-977606011118246973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7963372693830863386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08228cde41cf46c4e9638fda9dbf6e9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  x: 0
+  y: 0
+  lane: 0
+  direction: 0
+  position: 0
+  trafficLightOrder: 
+  lightTiming: 0
+  activeLight: 0
