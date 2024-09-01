@@ -36,7 +36,7 @@ namespace Concurrent {
     private readonly ConcurrentQueue<Action> _actions = new ConcurrentQueue<Action>(); 
     
     void populateBG() {
-        GameObject bgSegment = Instantiate(bgPrefab, new Vector3(0, -0.1f, 0), Quaternion.identity);
+        GameObject bgSegment = Instantiate(bgPrefab, new Vector3(0, -1f, 0), Quaternion.identity);
         bgSegment.transform.rotation = Quaternion.Euler(90, 0, 0);
         bgSegment.transform.localScale = new Vector3(1000000, 1000000, 1000000);
     }
@@ -163,10 +163,14 @@ namespace Concurrent {
         List<VirtualInt> newRoute = new List<VirtualInt>();
         foreach (VirtualIntMsg virtInt in vehicle.route) {
             newRoute.Add(intersections[virtInt.id]);
+            if (intersections[virtInt.id].id != virtInt.id) {
+                Debug.Log("Error: virtInt.id != virtInt.id");
+            }
+            //Debug.Log(intersections[virtInt.id].x + " " + intersections[virtInt.id].y);
         }
 
 
-        GameObject vehicle1 = Instantiate(vehicleType, new Vector3(x, 0f, y), Quaternion.identity);
+        GameObject vehicle1 = Instantiate(vehicleType, new Vector3(x, 1f, y), Quaternion.identity);
         vehicle1.transform.rotation = Quaternion.Euler(90, 0, zRot);
 
         Vehicle2D currentVehicle = vehicle1.GetComponent<Vehicle2D>();

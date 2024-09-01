@@ -12,7 +12,7 @@ namespace Concurrent
         public Vector2 endPos;
         public int id;
         public int laneCount;
-        public int speedLimit;
+        public int speedLimit = 20;
         public int capacity;
         public List<VirtualIntMsg> virtualInts;
 
