@@ -80,10 +80,10 @@ namespace Concurrent
             drawPathLine = false;
             accelerationMPSS = 5f;
             currentSpeed = 0f;
-            speed = 25f;
+            speed = 20f;
             visited = new();
-            tolerance = 0.5f; // modify this in prefab inspector
-            destTolerance = 0.5f;
+            tolerance = 1f; // modify this in prefab inspector
+            destTolerance = 1f;
             rg = GameObject.Find("RoadGenerator").GetComponent<RoadGenerator>();
         }
 
