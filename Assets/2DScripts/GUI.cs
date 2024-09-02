@@ -8,17 +8,17 @@ namespace Concurrent {
     private Text emissionText;
     private Text tripTimeText;
     private Text idleTimeText;
-    public Font inter; // Ensure this is assigned in the Unity Editor or programmatically
+    public Font inter; 
 
     private void Start() {
-      // Create Canvas
+      // create the white canvas
       GameObject canvasGO = new GameObject("Canvas");
       Canvas canvas = canvasGO.AddComponent<Canvas>();
       canvas.renderMode = RenderMode.ScreenSpaceOverlay;
       canvasGO.AddComponent<CanvasScaler>();
       canvasGO.AddComponent<GraphicRaycaster>();
 
-      // Create Panel
+      // creat the panel with its colours, size and position
       GameObject panelGO = new GameObject("Panel");
       panelGO.transform.SetParent(canvasGO.transform, false);
       RectTransform panelRect = panelGO.AddComponent<RectTransform>();
@@ -29,15 +29,16 @@ namespace Concurrent {
       panelRect.anchoredPosition = new Vector2(10, -10);
       panelGO.AddComponent<CanvasRenderer>();
       Image panelImage = panelGO.AddComponent<Image>();
-      panelImage.color = new Color(255, 255, 255, 1f); // Semi-transparent background
+      panelImage.color = new Color(255, 255, 255, 1f);
 
-      // Create Text elements
-      emissionText = CreateTextElement(panelGO.transform, new Vector2(10, -10), "Emissions: 0.00");
-      tripTimeText = CreateTextElement(panelGO.transform, new Vector2(10, -90), "Trip Time: 0.00");
-      idleTimeText = CreateTextElement(panelGO.transform, new Vector2(10, -170), "Idle Time: 0.00");
+      // programatically create the text elements with displacements of 80 pixels from each other
+      emissionText = CreateTextElement(panelGO.transform, new Vector2(10, -10), "Emissions: 0.00g");
+      tripTimeText = CreateTextElement(panelGO.transform, new Vector2(10, -90), "Trip Time: 0.00s");
+      idleTimeText = CreateTextElement(panelGO.transform, new Vector2(10, -170), "Idle Time: 0.00s");
     }
 
     private Text CreateTextElement(Transform parent, Vector2 position, string initialText) {
+      // create the any element with the given position and text
       GameObject textGO = new GameObject("Text");
       textGO.transform.SetParent(parent, false);
       RectTransform rectTransform = textGO.AddComponent<RectTransform>();
@@ -47,6 +48,7 @@ namespace Concurrent {
       rectTransform.anchoredPosition = position;
       rectTransform.sizeDelta = new Vector2(400, 80);
 
+      // set its font, size, colour and text
       Text text = textGO.AddComponent<Text>();
       text.font = inter != null ? inter : Resources.GetBuiltinResource<Font>("Arial.ttf");
       text.fontSize = 28;
@@ -61,11 +63,12 @@ namespace Concurrent {
       if (rg == null) {
         return;
       }
+
+      // get the vehicles and calculate the cumulative emissions, trip time and idle time
       List<Vehicle2D> vehicles = new List<Vehicle2D>();
       foreach (KeyValuePair<int, Vehicle2D> entry in rg.vehicles) {
         vehicles.Add(entry.Value);
       }
-
       float cumulEm = 0, cumulTrip = 0, cumulIdle = 0;
       foreach (Vehicle2D vehicle in vehicles) {
         cumulEm += vehicle.cumulativeEmission;
@@ -73,9 +76,10 @@ namespace Concurrent {
         cumulIdle += vehicle.idleTime;
       }
 
-      emissionText.text = $"Emissions: {cumulEm:F2}";
-      tripTimeText.text = $"Trip Time: {cumulTrip:F2}";
-      idleTimeText.text = $"Idle Time: {cumulIdle:F2}";
+      // update the text elements with their new values
+      emissionText.text = $"Emissions: {cumulEm:F2} g";
+      tripTimeText.text = $"Trip Time: {cumulTrip:F2}s";
+      idleTimeText.text = $"Idle Time: {cumulIdle:F2}s";
     }
   }
 }

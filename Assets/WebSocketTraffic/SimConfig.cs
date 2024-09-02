@@ -206,6 +206,7 @@ namespace WebSocketTraffic {
 
         }
 
+        // helper method to create a texture with a specific color
         Texture2D CreateTextureWithColor(int width, int height, Color color)
         {
             Texture2D texture = new Texture2D(width, height);

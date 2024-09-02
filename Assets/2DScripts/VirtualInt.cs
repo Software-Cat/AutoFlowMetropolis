@@ -22,13 +22,13 @@ namespace Concurrent
 
         public int road;
 
-
         public bool IsEnd => position == 1f;
 
         public Vector3 RealPosition => new(x, 0f, y);
 
         public float timeElapsed = 0f;
 
+        // initialize the traffic light order and first active light
         private void Awake() {
             if (trafficLightOrder.Count > 0) {
                 lightind = 0;
@@ -36,6 +36,8 @@ namespace Concurrent
             }
         }
 
+
+        // cycling through the traffic light order
         private void Update() {
             if (trafficLightOrder.Count == 0) {
                 return;
